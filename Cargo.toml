@@ -2,6 +2,13 @@
 name = "t-invest-sdk"
 version = "0.1.0"
 edition = "2021"
+authors = ["Artem Evsevev <artem@qrsoft.ru>"]
+description = "T-Invest API SDK"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/artemevsevev/t-invest-sdk"
+keywords = ["api", "trading"]
+categories = ["finance"]
 
 [dependencies]
 chrono = "0.4.39"
