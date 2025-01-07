@@ -1,0 +1,10 @@
+[package]
+name = "t-invest-sdk"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+prost = "0.13.4"
+prost-types = "0.13.4"
+tonic = { version = "0.12.3", features = ["tls", "tls-native-roots", "gzip"] }
+uuid = { version = "1.11.0", features = ["v4"] }
