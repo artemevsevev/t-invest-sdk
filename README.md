@@ -5,16 +5,19 @@
 [Документация для разработчиков](https://developer.tbank.ru/invest/intro/intro)
 
 # Пример
+
 ## Cargo.toml
+
 ```toml
 [dependencies]
-t-invest-sdk = "0.2.0"
+t-invest-sdk = "0.2.2"
 tokio = { version = "1.42.0", features = ["full"] }
 flume = "0.11.1"
 anyhow = "1.0.95"
 ```
 
 ## main.rs
+
 ```rust
 use anyhow::anyhow;
 use std::env;
