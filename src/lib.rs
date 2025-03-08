@@ -39,16 +39,28 @@ pub enum TInvestError {
 impl Interceptor for TInvestInterceptor {
     fn call(&mut self, request: tonic::Request<()>) -> Result<tonic::Request<()>, tonic::Status> {
         let mut req = request;
+
         req.metadata_mut().append(
             "authorization",
-            format!("bearer {}", self.token).parse().unwrap(),
+            format!("bearer {}", self.token)
+                .parse()
+                .map_err(|_| tonic::Status::internal("Invalid authorization header"))?,
         );
+
         req.metadata_mut().append(
             "x-tracking-id",
-            uuid::Uuid::new_v4().to_string().parse().unwrap(),
+            uuid::Uuid::new_v4()
+                .to_string()
+                .parse()
+                .map_err(|_| tonic::Status::internal("Invalid x-tracking-id"))?,
         );
-        req.metadata_mut()
-            .append("x-app-name", "artemevsevev.t-invest-sdk".parse().unwrap());
+
+        req.metadata_mut().append(
+            "x-app-name",
+            "artemevsevev.t-invest-sdk"
+                .parse()
+                .map_err(|_| tonic::Status::internal("Invalid x-app-name"))?,
+        );
 
         Ok(req)
     }
@@ -210,19 +222,13 @@ impl TryFrom<Decimal> for Quotation {
     type Error = String;
 
     fn try_from(value: Decimal) -> Result<Self, Self::Error> {
-        let units = match value.trunc().to_i64() {
-            Some(v) => v,
-            None => {
-                return Err(format!("Can't convert decimal {} to quotation", value));
-            }
-        };
-
-        let nano = match (value.fract() * Decimal::new(1_000_000_000, 0)).to_i32() {
-            Some(v) => v,
-            None => {
-                return Err(format!("Can't convert decimal {} to quotation", value));
-            }
-        };
+        let units = value
+            .trunc()
+            .to_i64()
+            .ok_or_else(|| format!("Can't convert decimal {} to quotation", value))?;
+        let nano = (value.fract() * Decimal::new(1_000_000_000, 0))
+            .to_i32()
+            .ok_or_else(|| format!("Can't convert decimal {} to quotation", value))?;
 
         Ok(Quotation { units, nano })
     }
