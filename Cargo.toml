@@ -16,7 +16,7 @@ prost = "0.13.5"
 prost-types = "0.13.5"
 rust_decimal = "1.36.0"
 thiserror = "2.0.12"
-tonic = { version = "0.12.3", features = ["tls", "tls-native-roots", "gzip"] }
+tonic = { version = "0.13", features = ["tls-ring", "tls-native-roots", "gzip"] }
 uuid = { version = "1.16.0", features = ["v4"] }
 
 [dev-dependencies]
