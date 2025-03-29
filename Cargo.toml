@@ -7,7 +7,7 @@ description = "T-Invest API SDK"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/artemevsevev/t-invest-sdk"
-keywords = ["api", "trading", "tbank", "tinvest", "finance", "skd"]
+keywords = ["api", "trading", "tbank", "tinvest", "finance", "sdk"]
 categories = ["finance"]
 exclude = ["investAPI/*"]
 
@@ -16,7 +16,11 @@ prost = "0.13.5"
 prost-types = "0.13.5"
 rust_decimal = "1.37.1"
 thiserror = "2.0.12"
-tonic = { version = "0.13", features = ["tls-ring", "tls-native-roots", "gzip"] }
+tonic = { version = "0.13", features = [
+    "tls-ring",
+    "tls-native-roots",
+    "gzip",
+] }
 uuid = { version = "1.16.0", features = ["v4"] }
 
 [dev-dependencies]
