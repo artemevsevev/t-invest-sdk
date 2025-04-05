@@ -2475,6 +2475,7 @@ pub struct CreateFavoriteGroupResponse {
     #[prost(string, tag = "2")]
     pub group_name: ::prost::alloc::string::String,
 }
+/// Запрос удаления избранной группы
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteFavoriteGroupRequest {
     /// Уникальный идентификатор группы.
@@ -2483,6 +2484,7 @@ pub struct DeleteFavoriteGroupRequest {
 }
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]
 pub struct DeleteFavoriteGroupResponse {}
+/// Запрос получения списка избранных групп
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetFavoriteGroupsRequest {
     /// Массив идентификаторов инструментов. Принимает значение `figi` или `instrument_uid`. Если в группе будет хотя бы один из инструментов массива, то в ответе у группы вернется признак `containsInstrument = true`.
@@ -2492,6 +2494,7 @@ pub struct GetFavoriteGroupsRequest {
     #[prost(string, repeated, tag = "2")]
     pub excluded_group_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+/// Избранные группы
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetFavoriteGroupsResponse {
     /// Массив групп избранных списков инструментов.
@@ -2500,6 +2503,7 @@ pub struct GetFavoriteGroupsResponse {
 }
 /// Nested message and enum types in `GetFavoriteGroupsResponse`.
 pub mod get_favorite_groups_response {
+    /// Избранная группа
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FavoriteGroup {
         /// Уникальный идентификатор группы.
@@ -3122,12 +3126,14 @@ pub mod get_forecast_response {
         pub price_change_rel: ::core::option::Option<super::Quotation>,
     }
 }
+/// Запрос ставок риска
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RiskRatesRequest {
     /// Идентификаторы инструментов.
     #[prost(string, repeated, tag = "1")]
     pub instrument_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+/// Ставки риска
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RiskRatesResponse {
     #[prost(message, repeated, tag = "1")]
@@ -3852,7 +3858,7 @@ pub mod instruments_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Получить расписания торгов торговых площадок
+        /// TradingSchedules — расписания торговых площадок
         pub async fn trading_schedules(
             &mut self,
             request: impl tonic::IntoRequest<super::TradingSchedulesRequest>,
@@ -3882,7 +3888,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить облигации по ее идентификатору
+        /// BondBy — получить облигацию по ее идентификатору
         pub async fn bond_by(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
@@ -3909,7 +3915,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список облигаций
+        /// Bonds — список облигаций
         pub async fn bonds(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
@@ -3936,7 +3942,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить график выплат купонов по облигации
+        /// GetBondCoupons — график выплат купонов по облигации
         pub async fn get_bond_coupons(
             &mut self,
             request: impl tonic::IntoRequest<super::GetBondCouponsRequest>,
@@ -3966,7 +3972,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить события по облигации
+        /// GetBondEvents — события по облигации
         pub async fn get_bond_events(
             &mut self,
             request: impl tonic::IntoRequest<super::GetBondEventsRequest>,
@@ -3996,7 +4002,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить валюту по ее идентификатору
+        /// CurrencyBy — получить валюту по ее идентификатору
         pub async fn currency_by(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
@@ -4026,7 +4032,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список валют
+        /// Currencies — список валют
         pub async fn currencies(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
@@ -4056,7 +4062,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить инвестиционный фонд по его идентификатору
+        /// EtfBy — получить инвестиционный фонд по его идентификатору
         pub async fn etf_by(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
@@ -4083,7 +4089,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список инвестиционных фондов
+        /// Etfs — список инвестиционных фондов
         pub async fn etfs(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
@@ -4110,7 +4116,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить фьючерс по его идентификатору
+        /// FutureBy — получить фьючерс по его идентификатору
         pub async fn future_by(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
@@ -4137,7 +4143,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список фьючерсов
+        /// Futures — список фьючерсов
         pub async fn futures(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
@@ -4167,7 +4173,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить опцион по его идентификатору
+        /// OptionBy — получить опцион по его идентификатору
         pub async fn option_by(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
@@ -4194,7 +4200,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Deprecated Получить список опционов
+        /// Deprecated Options — список опционов
         #[deprecated]
         pub async fn options(
             &mut self,
@@ -4225,7 +4231,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список опционов
+        /// OptionsBy — список опционов
         pub async fn options_by(
             &mut self,
             request: impl tonic::IntoRequest<super::FilterOptionsRequest>,
@@ -4255,7 +4261,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить акцию по ее идентификатору
+        /// ShareBy — получить акцию по ее идентификатору
         pub async fn share_by(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
@@ -4282,7 +4288,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список акций
+        /// Shares — список акций
         pub async fn shares(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
@@ -4309,7 +4315,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить индикативные инструменты — индексы, товары и другие
+        /// Indicatives — индикативные инструменты — индексы, товары и другие
         pub async fn indicatives(
             &mut self,
             request: impl tonic::IntoRequest<super::IndicativesRequest>,
@@ -4339,7 +4345,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить накопленный купонный доход по облигации
+        /// GetAccruedInterests — накопленный купонный доход по облигации
         pub async fn get_accrued_interests(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAccruedInterestsRequest>,
@@ -4369,7 +4375,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить размера гарантийного обеспечения по фьючерсам
+        /// GetFuturesMargin — размера гарантийного обеспечения по фьючерсам
         pub async fn get_futures_margin(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFuturesMarginRequest>,
@@ -4399,7 +4405,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить основную информацию об инструменте
+        /// GetInstrumentBy — основная информация об инструменте
         pub async fn get_instrument_by(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
@@ -4429,7 +4435,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить события выплаты дивидендов по инструменту
+        /// GetDividends — события выплаты дивидендов по инструменту
         pub async fn get_dividends(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDividendsRequest>,
@@ -4459,7 +4465,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить актив по его идентификатору
+        /// GetAssetBy — получить актив по его идентификатору
         pub async fn get_asset_by(
             &mut self,
             request: impl tonic::IntoRequest<super::AssetRequest>,
@@ -4486,7 +4492,8 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список активов. Метод работает для всех инструментов, кроме срочных — фьючерсов и опционов
+        /// GetAssets — список активов
+        /// Метод работает для всех инструментов, кроме срочных — фьючерсов и опционов
         pub async fn get_assets(
             &mut self,
             request: impl tonic::IntoRequest<super::AssetsRequest>,
@@ -4513,7 +4520,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список избранных инструментов
+        /// GetFavorites — получить список избранных инструментов
         pub async fn get_favorites(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFavoritesRequest>,
@@ -4543,7 +4550,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Отредактировать список избранных инструментов
+        /// EditFavorites — отредактировать список избранных инструментов
         pub async fn edit_favorites(
             &mut self,
             request: impl tonic::IntoRequest<super::EditFavoritesRequest>,
@@ -4573,7 +4580,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Создать новую группу избранных инструментов
+        /// CreateFavoriteGroup — создать новую группу избранных инструментов
         pub async fn create_favorite_group(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateFavoriteGroupRequest>,
@@ -4603,7 +4610,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Удалить группу избранных инструментов
+        /// DeleteFavoriteGroup — удалить группу избранных инструментов
         pub async fn delete_favorite_group(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteFavoriteGroupRequest>,
@@ -4633,7 +4640,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список групп избранных инструментов
+        /// GetFavoriteGroups — список групп избранных инструментов
         pub async fn get_favorite_groups(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFavoriteGroupsRequest>,
@@ -4663,7 +4670,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список стран
+        /// GetCountries — список стран
         pub async fn get_countries(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCountriesRequest>,
@@ -4693,7 +4700,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Найти инструмент
+        /// FindInstrument — найти инструмент
         pub async fn find_instrument(
             &mut self,
             request: impl tonic::IntoRequest<super::FindInstrumentRequest>,
@@ -4723,7 +4730,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список брендов
+        /// GetBrands — список брендов
         pub async fn get_brands(
             &mut self,
             request: impl tonic::IntoRequest<super::GetBrandsRequest>,
@@ -4753,7 +4760,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить бренд по его идентификатору
+        /// GetBrandBy — получить бренд по его идентификатору
         pub async fn get_brand_by(
             &mut self,
             request: impl tonic::IntoRequest<super::GetBrandRequest>,
@@ -4780,7 +4787,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить фундаментальные показатели по активу
+        /// GetAssetFundamentals — фундаментальные показатели по активу
         pub async fn get_asset_fundamentals(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAssetFundamentalsRequest>,
@@ -4810,7 +4817,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить расписания выхода отчетностей эмитентов
+        /// GetAssetReports — расписания выхода отчетностей эмитентов
         pub async fn get_asset_reports(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAssetReportsRequest>,
@@ -4840,7 +4847,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить мнения аналитиков по инструменту
+        /// GetConsensusForecasts — мнения аналитиков по инструменту
         pub async fn get_consensus_forecasts(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConsensusForecastsRequest>,
@@ -4870,7 +4877,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить прогнозов инвестдомов по инструменту
+        /// GetForecastBy — прогнозы инвестдомов по инструменту
         pub async fn get_forecast_by(
             &mut self,
             request: impl tonic::IntoRequest<super::GetForecastRequest>,
@@ -4900,6 +4907,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        /// GetRiskRates — ставки риска по инструменту
         pub async fn get_risk_rates(
             &mut self,
             request: impl tonic::IntoRequest<super::RiskRatesRequest>,
@@ -6340,6 +6348,12 @@ pub enum CandleInterval {
     Week = 12,
     /// От 1 месяца до 10 лет. Максимальное значение `limit` — 120.
     Month = 13,
+    /// От 5 секунд до 200 минут. Максимальное значение `limit` — 2500.
+    CandleInterval5Sec = 14,
+    /// От 10 секунд до 200 минут. Максимальное значение `limit` — 1250.
+    CandleInterval10Sec = 15,
+    /// От 30 секунд до 20 часов. Максимальное значение `limit` — 2500.
+    CandleInterval30Sec = 16,
 }
 impl CandleInterval {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -6362,6 +6376,9 @@ impl CandleInterval {
             Self::CandleInterval4Hour => "CANDLE_INTERVAL_4_HOUR",
             Self::Week => "CANDLE_INTERVAL_WEEK",
             Self::Month => "CANDLE_INTERVAL_MONTH",
+            Self::CandleInterval5Sec => "CANDLE_INTERVAL_5_SEC",
+            Self::CandleInterval10Sec => "CANDLE_INTERVAL_10_SEC",
+            Self::CandleInterval30Sec => "CANDLE_INTERVAL_30_SEC",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -6381,6 +6398,9 @@ impl CandleInterval {
             "CANDLE_INTERVAL_4_HOUR" => Some(Self::CandleInterval4Hour),
             "CANDLE_INTERVAL_WEEK" => Some(Self::Week),
             "CANDLE_INTERVAL_MONTH" => Some(Self::Month),
+            "CANDLE_INTERVAL_5_SEC" => Some(Self::CandleInterval5Sec),
+            "CANDLE_INTERVAL_10_SEC" => Some(Self::CandleInterval10Sec),
+            "CANDLE_INTERVAL_30_SEC" => Some(Self::CandleInterval30Sec),
             _ => None,
         }
     }
@@ -6577,7 +6597,7 @@ pub mod market_data_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Запросить исторические свечи по инструменту.
+        /// GetCandles — исторические свечи по инструменту
         pub async fn get_candles(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCandlesRequest>,
@@ -6607,7 +6627,7 @@ pub mod market_data_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Запросить цены последних сделок по инструментам.
+        /// GetLastPrices — цены последних сделок по инструментам
         pub async fn get_last_prices(
             &mut self,
             request: impl tonic::IntoRequest<super::GetLastPricesRequest>,
@@ -6637,7 +6657,7 @@ pub mod market_data_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить стакан по инструменту.
+        /// GetOrderBook — стакан по инструменту
         pub async fn get_order_book(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrderBookRequest>,
@@ -6667,7 +6687,7 @@ pub mod market_data_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Запросить статус торгов по инструментам.
+        /// GetTradingStatus — статус торгов по инструменту
         pub async fn get_trading_status(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTradingStatusRequest>,
@@ -6697,7 +6717,7 @@ pub mod market_data_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Запросить статус торгов по инструментам.
+        /// GetTradingStatuses — статус торгов по инструментам
         pub async fn get_trading_statuses(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTradingStatusesRequest>,
@@ -6727,7 +6747,8 @@ pub mod market_data_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Запросить обезличенные сделки за последний час.
+        /// GetLastTrades — обезличенные сделки
+        /// Обезличенные сделки по инструменту. Метод гарантирует получение информации за последний час.
         pub async fn get_last_trades(
             &mut self,
             request: impl tonic::IntoRequest<super::GetLastTradesRequest>,
@@ -6757,7 +6778,7 @@ pub mod market_data_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Запросить цены закрытия торговой сессии по инструментам.
+        /// GetClosePrices — цены закрытия торговой сессии по инструментам
         pub async fn get_close_prices(
             &mut self,
             request: impl tonic::IntoRequest<super::GetClosePricesRequest>,
@@ -6787,7 +6808,7 @@ pub mod market_data_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить технические индикаторы по инструменту.
+        /// GetTechAnalysis — технические индикаторы по инструменту
         pub async fn get_tech_analysis(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTechAnalysisRequest>,
@@ -6912,7 +6933,7 @@ pub mod market_data_stream_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Bidirectional-стрим предоставления биржевой информации.
+        /// MarketDataStream — bidirectional стрим предоставления биржевой информации
         pub async fn market_data_stream(
             &mut self,
             request: impl tonic::IntoStreamingRequest<Message = super::MarketDataRequest>,
@@ -6942,7 +6963,7 @@ pub mod market_data_stream_service_client {
                 );
             self.inner.streaming(req, path, codec).await
         }
-        /// Server-side стрим предоставления биржевой информации.
+        /// MarketDataServerSideStream — server-side стрим предоставления биржевой информации
         pub async fn market_data_server_side_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::MarketDataServerSideStreamRequest>,
@@ -7283,6 +7304,9 @@ pub struct PortfolioPosition {
     /// Рассчитанная доходность портфеля за день.
     #[prost(message, optional, tag = "31")]
     pub daily_yield: ::core::option::Option<MoneyValue>,
+    /// Тикер инструмента.
+    #[prost(string, tag = "32")]
+    pub ticker: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VirtualPortfolioPosition {
@@ -7322,6 +7346,9 @@ pub struct VirtualPortfolioPosition {
     /// Рассчитанная доходность портфеля за день.
     #[prost(message, optional, tag = "31")]
     pub daily_yield: ::core::option::Option<MoneyValue>,
+    /// Тикер инструмента.
+    #[prost(string, tag = "32")]
+    pub ticker: ::prost::alloc::string::String,
 }
 /// Баланс позиции ценной бумаги.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -7341,6 +7368,9 @@ pub struct PositionsSecurities {
     /// Уникальный идентификатор инструмента.
     #[prost(string, tag = "5")]
     pub instrument_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "6")]
+    pub ticker: ::prost::alloc::string::String,
     /// Заблокировано на бирже.
     #[prost(bool, tag = "11")]
     pub exchange_blocked: bool,
@@ -7366,6 +7396,9 @@ pub struct PositionsFutures {
     /// Уникальный идентификатор  инструмента.
     #[prost(string, tag = "5")]
     pub instrument_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "6")]
+    pub ticker: ::prost::alloc::string::String,
 }
 /// Баланс опциона.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -7376,6 +7409,9 @@ pub struct PositionsOptions {
     /// Уникальный идентификатор  инструмента.
     #[prost(string, tag = "2")]
     pub instrument_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "3")]
+    pub ticker: ::prost::alloc::string::String,
     /// Количество бумаг, заблокированных выставленными заявками.
     #[prost(int64, tag = "11")]
     pub blocked: i64,
@@ -8486,7 +8522,7 @@ pub mod operations_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Получить список операций по счету.
+        /// GetOperations — список операций по счету
         /// При работе с методом учитывайте [особенности взаимодействия](/invest/services/operations/operations_problems).
         pub async fn get_operations(
             &mut self,
@@ -8517,7 +8553,7 @@ pub mod operations_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить портфель по счету.
+        /// GetPortfolio — портфель по счету
         pub async fn get_portfolio(
             &mut self,
             request: impl tonic::IntoRequest<super::PortfolioRequest>,
@@ -8547,7 +8583,7 @@ pub mod operations_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список позиций по счету.
+        /// GetPositions — список позиций по счету
         pub async fn get_positions(
             &mut self,
             request: impl tonic::IntoRequest<super::PositionsRequest>,
@@ -8577,7 +8613,7 @@ pub mod operations_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить доступный остаток для вывода средств.
+        /// GetWithdrawLimits — доступный остаток для вывода средств
         pub async fn get_withdraw_limits(
             &mut self,
             request: impl tonic::IntoRequest<super::WithdrawLimitsRequest>,
@@ -8607,7 +8643,7 @@ pub mod operations_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить брокерский отчет.
+        /// GetBrokerReport — брокерский отчет.
         pub async fn get_broker_report(
             &mut self,
             request: impl tonic::IntoRequest<super::BrokerReportRequest>,
@@ -8637,7 +8673,7 @@ pub mod operations_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить отчет «Справка о доходах за пределами РФ».
+        /// GetDividendsForeignIssuer — отчет «Справка о доходах за пределами РФ»
         pub async fn get_dividends_foreign_issuer(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDividendsForeignIssuerRequest>,
@@ -8667,7 +8703,7 @@ pub mod operations_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список операций по счету с пагинацией.
+        /// GetOperationsByCursor — список операций по счету с пагинацией
         /// При работе с методом учитывайте [особенности взаимодействия](/invest/services/operations/operations_problems).
         pub async fn get_operations_by_cursor(
             &mut self,
@@ -8793,7 +8829,7 @@ pub mod operations_stream_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Server-side stream обновлений портфеля.
+        /// PortfolioStream — стрим обновлений портфеля
         pub async fn portfolio_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::PortfolioStreamRequest>,
@@ -8823,7 +8859,7 @@ pub mod operations_stream_service_client {
                 );
             self.inner.server_streaming(req, path, codec).await
         }
-        /// Server-side stream обновлений информации по изменению позиций портфеля.
+        /// PositionsStream — стрим обновлений информации по изменению позиций портфеля
         pub async fn positions_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::PositionsStreamRequest>,
@@ -9908,7 +9944,7 @@ pub mod orders_stream_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Stream сделок пользователя.
+        /// TradesStream — стрим сделок пользователя
         pub async fn trades_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::TradesStreamRequest>,
@@ -9938,7 +9974,7 @@ pub mod orders_stream_service_client {
                 );
             self.inner.server_streaming(req, path, codec).await
         }
-        /// Stream поручений пользователя.
+        /// OrderStateStream — стрим поручений пользователя
         /// Перед работой прочитайте [статью](/invest/services/orders/orders_state_stream).
         pub async fn order_state_stream(
             &mut self,
@@ -10062,7 +10098,7 @@ pub mod orders_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Метод выставления заявки.
+        /// PostOrder — выставить заявку
         pub async fn post_order(
             &mut self,
             request: impl tonic::IntoRequest<super::PostOrderRequest>,
@@ -10092,7 +10128,8 @@ pub mod orders_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Асинхронный метод выставления заявки.
+        /// PostOrderAsync — выставить заявку асинхронным методом
+        /// Особенности работы приведены в [статье](/invest/services/orders/async).
         pub async fn post_order_async(
             &mut self,
             request: impl tonic::IntoRequest<super::PostOrderAsyncRequest>,
@@ -10122,7 +10159,7 @@ pub mod orders_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Метод отмены биржевой заявки.
+        /// CancelOrder — отменить заявку
         pub async fn cancel_order(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelOrderRequest>,
@@ -10152,7 +10189,7 @@ pub mod orders_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Метод получения статуса торгового поручения.
+        /// GetOrderState — получить статус торгового поручения
         pub async fn get_order_state(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrderStateRequest>,
@@ -10179,7 +10216,7 @@ pub mod orders_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Метод получения списка активных заявок по счету.
+        /// GetOrders — получить список активных заявок по счету
         pub async fn get_orders(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrdersRequest>,
@@ -10209,7 +10246,7 @@ pub mod orders_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Метод изменения выставленной заявки.
+        /// ReplaceOrder — изменить выставленную заявку
         pub async fn replace_order(
             &mut self,
             request: impl tonic::IntoRequest<super::ReplaceOrderRequest>,
@@ -10239,7 +10276,7 @@ pub mod orders_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Расчет количества доступных для покупки/продажи лотов.
+        /// GetMaxLots — расчет количества доступных для покупки/продажи лотов
         pub async fn get_max_lots(
             &mut self,
             request: impl tonic::IntoRequest<super::GetMaxLotsRequest>,
@@ -10269,7 +10306,7 @@ pub mod orders_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Метод получения предварительной стоимости для лимитной заявки.
+        /// GetOrderPrice — получить предварительную стоимость для лимитной заявки
         pub async fn get_order_price(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrderPriceRequest>,
@@ -10315,39 +10352,39 @@ pub struct GetAccountsResponse {
     #[prost(message, repeated, tag = "1")]
     pub accounts: ::prost::alloc::vec::Vec<Account>,
 }
-/// Информация о счёте.
+/// Информация о счeте.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Account {
-    /// Идентификатор счёта.
+    /// Идентификатор счeта.
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
-    /// Тип счёта.
+    /// Тип счeта.
     #[prost(enumeration = "AccountType", tag = "2")]
     pub r#type: i32,
-    /// Название счёта.
+    /// Название счeта.
     #[prost(string, tag = "3")]
     pub name: ::prost::alloc::string::String,
-    /// Статус счёта.
+    /// Статус счeта.
     #[prost(enumeration = "AccountStatus", tag = "4")]
     pub status: i32,
-    /// Дата открытия счёта в часовом поясе UTC.
+    /// Дата открытия счeта в часовом поясе UTC.
     #[prost(message, optional, tag = "5")]
     pub opened_date: ::core::option::Option<::prost_types::Timestamp>,
-    /// Дата закрытия счёта в часовом поясе UTC.
+    /// Дата закрытия счeта в часовом поясе UTC.
     #[prost(message, optional, tag = "6")]
     pub closed_date: ::core::option::Option<::prost_types::Timestamp>,
-    /// Уровень доступа к текущему счёту (определяется токеном).
+    /// Уровень доступа к текущему счeту (определяется токеном).
     #[prost(enumeration = "AccessLevel", tag = "7")]
     pub access_level: i32,
 }
-/// Запрос маржинальных показателей по счёту.
+/// Запрос маржинальных показателей по счeту.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetMarginAttributesRequest {
-    /// Идентификатор счёта пользователя.
+    /// Идентификатор счeта пользователя.
     #[prost(string, tag = "1")]
     pub account_id: ::prost::alloc::string::String,
 }
-/// Маржинальные показатели по счёту.
+/// Маржинальные показатели по счeту.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetMarginAttributesResponse {
     /// Ликвидная стоимость портфеля. [Подробнее про ликвидный портфель](<https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q4>).
@@ -10365,7 +10402,7 @@ pub struct GetMarginAttributesResponse {
     /// Объем недостающих средств. Разница между стартовой маржой и ликвидной стоимости портфеля.
     #[prost(message, optional, tag = "5")]
     pub amount_of_missing_funds: ::core::option::Option<MoneyValue>,
-    /// Скорректированная маржа. Начальная маржа, в которой плановые позиции рассчитываются с учётом активных заявок на покупку позиций лонг или продажу позиций шорт.
+    /// Скорректированная маржа. Начальная маржа, в которой плановые позиции рассчитываются с учeтом активных заявок на покупку позиций лонг или продажу позиций шорт.
     #[prost(message, optional, tag = "6")]
     pub corrected_margin: ::core::option::Option<MoneyValue>,
 }
@@ -10432,13 +10469,13 @@ pub struct GetInfoResponse {
     #[prost(string, tag = "12")]
     pub risk_level_code: ::prost::alloc::string::String,
 }
-/// Тип счёта.
+/// Тип счeта.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum AccountType {
-    /// Тип аккаунта не определён.
+    /// Тип аккаунта не определeн.
     Unspecified = 0,
-    /// Брокерский счёт Т-Инвестиций.
+    /// Брокерский счeт Т-Инвестиций.
     Tinkoff = 1,
     /// ИИС.
     TinkoffIis = 2,
@@ -10473,17 +10510,17 @@ impl AccountType {
         }
     }
 }
-/// Статус счёта.
+/// Статус счeта.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum AccountStatus {
-    /// Статус счёта не определён.
+    /// Статус счeта не определeн.
     Unspecified = 0,
     /// Новый, в процессе открытия.
     New = 1,
-    /// Открытый и активный счёт.
+    /// Открытый и активный счeт.
     Open = 2,
-    /// Закрытый счёт.
+    /// Закрытый счeт.
     Closed = 3,
     /// Все счета.
     All = 4,
@@ -10514,13 +10551,13 @@ impl AccountStatus {
         }
     }
 }
-/// Уровень доступа к счёту.
+/// Уровень доступа к счeту.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum AccessLevel {
-    /// Уровень доступа не определён.
+    /// Уровень доступа не определeн.
     AccountAccessLevelUnspecified = 0,
-    /// Полный доступ к счёту.
+    /// Полный доступ к счeту.
     AccountAccessLevelFullAccess = 1,
     /// Доступ с уровнем прав «только чтение».
     AccountAccessLevelReadOnly = 2,
@@ -10646,7 +10683,8 @@ pub mod users_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Получить счета пользователя.
+        /// GetAccounts — счета пользователя
+        /// Получить список счетов.
         pub async fn get_accounts(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAccountsRequest>,
@@ -10676,7 +10714,8 @@ pub mod users_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Рассчитать маржинальные показатели по счёту.
+        /// GetMarginAttributes — маржинальные показатели по счeту
+        /// Метод позволяет получить маржинальные показатели и ликвидность по заданному счeту.
         pub async fn get_margin_attributes(
             &mut self,
             request: impl tonic::IntoRequest<super::GetMarginAttributesRequest>,
@@ -10706,7 +10745,8 @@ pub mod users_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Запросить тариф пользователя.
+        /// GetUserTariff — тариф пользователя
+        /// Получить информацию о текущих лимитах на подклчение, согласно текущему тарифу пользователя.
         pub async fn get_user_tariff(
             &mut self,
             request: impl tonic::IntoRequest<super::GetUserTariffRequest>,
@@ -10736,7 +10776,8 @@ pub mod users_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить информацию о пользователе.
+        /// GetInfo — информация о пользователе
+        /// Получить информацию о пользователе: тариф, признак квалификации, пройденные тесты и др.
         pub async fn get_info(
             &mut self,
             request: impl tonic::IntoRequest<super::GetInfoRequest>,
@@ -10902,7 +10943,7 @@ pub mod sandbox_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Зарегистрировать счет.
+        /// OpenSandboxAccount — зарегистрировать счет
         pub async fn open_sandbox_account(
             &mut self,
             request: impl tonic::IntoRequest<super::OpenSandboxAccountRequest>,
@@ -10932,7 +10973,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить счета.
+        /// GetSandboxAccounts — счета пользователя
         pub async fn get_sandbox_accounts(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAccountsRequest>,
@@ -10962,7 +11003,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Закрыть счет.
+        /// CloseSandboxAccount — закрыть счет
         pub async fn close_sandbox_account(
             &mut self,
             request: impl tonic::IntoRequest<super::CloseSandboxAccountRequest>,
@@ -10992,7 +11033,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Выставить торговое поручение.
+        /// PostSandboxOrder — выставить заявку
         pub async fn post_sandbox_order(
             &mut self,
             request: impl tonic::IntoRequest<super::PostOrderRequest>,
@@ -11022,7 +11063,38 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Изменить выставленную заявку.
+        /// PostSandboxOrderAsync — выставить заявку асинхронным методом
+        /// Особенности работы приведены в [статье](/invest/services/orders/async).
+        pub async fn post_sandbox_order_async(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PostOrderAsyncRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::PostOrderAsyncResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/PostSandboxOrderAsync",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "PostSandboxOrderAsync",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// ReplaceSandboxOrder — изменить выставленную заявку
         pub async fn replace_sandbox_order(
             &mut self,
             request: impl tonic::IntoRequest<super::ReplaceOrderRequest>,
@@ -11052,7 +11124,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список активных заявок по счету.
+        /// GetSandboxOrders — получить список активных заявок по счету
         pub async fn get_sandbox_orders(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrdersRequest>,
@@ -11082,7 +11154,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Отменить торговое поручение.
+        /// CancelSandboxOrder — отменить заявку
         pub async fn cancel_sandbox_order(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelOrderRequest>,
@@ -11112,7 +11184,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить статус заявки в песочнице. Заявки хранятся в таблице 7 дней.
+        /// GetSandboxOrderState — получить статус торгового поручения
         pub async fn get_sandbox_order_state(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrderStateRequest>,
@@ -11139,7 +11211,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить позиции по виртуальному счету.
+        /// GetSandboxPositions — список позиций по счету
         pub async fn get_sandbox_positions(
             &mut self,
             request: impl tonic::IntoRequest<super::PositionsRequest>,
@@ -11169,7 +11241,8 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить операции по номеру счета.
+        /// GetSandboxOperations — список операций по счету
+        /// При работе с методом учитывайте [особенности взаимодействия](/invest/services/operations/operations_problems).
         pub async fn get_sandbox_operations(
             &mut self,
             request: impl tonic::IntoRequest<super::OperationsRequest>,
@@ -11199,7 +11272,8 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить операции по номеру счета с пагинацией.
+        /// GetSandboxOperationsByCursor — список операций по счету с пагинацией
+        /// При работе с методом учитывайте [особенности взаимодействия](/invest/services/operations/operations_problems).
         pub async fn get_sandbox_operations_by_cursor(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOperationsByCursorRequest>,
@@ -11229,7 +11303,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить портфель.
+        /// GetSandboxPortfolio — портфель по счету
         pub async fn get_sandbox_portfolio(
             &mut self,
             request: impl tonic::IntoRequest<super::PortfolioRequest>,
@@ -11259,7 +11333,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Пополнить счет.
+        /// SandboxPayIn — пополнить счет.
         pub async fn sandbox_pay_in(
             &mut self,
             request: impl tonic::IntoRequest<super::SandboxPayInRequest>,
@@ -11289,7 +11363,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить доступный остаток для вывода средств.
+        /// GetSandboxWithdrawLimits — доступный остаток для вывода средств
         pub async fn get_sandbox_withdraw_limits(
             &mut self,
             request: impl tonic::IntoRequest<super::WithdrawLimitsRequest>,
@@ -11319,7 +11393,7 @@ pub mod sandbox_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Расчет количества доступных для покупки/продажи лотов в песочнице.
+        /// GetSandboxMaxLots — расчет количества доступных для покупки/продажи лотов
         pub async fn get_sandbox_max_lots(
             &mut self,
             request: impl tonic::IntoRequest<super::GetMaxLotsRequest>,
@@ -11688,7 +11762,7 @@ pub mod signal_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Запросить стратегии.
+        /// GetStrategies — стратегии
         pub async fn get_strategies(
             &mut self,
             request: impl tonic::IntoRequest<super::GetStrategiesRequest>,
@@ -11718,7 +11792,7 @@ pub mod signal_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Запросить сигналы.
+        /// GetSignals — сигналы
         pub async fn get_signals(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSignalsRequest>,
@@ -12324,7 +12398,7 @@ pub mod stop_orders_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// Выставить стоп-заявку.
+        /// PostStopOrder — выставить стоп-заявку
         pub async fn post_stop_order(
             &mut self,
             request: impl tonic::IntoRequest<super::PostStopOrderRequest>,
@@ -12354,7 +12428,7 @@ pub mod stop_orders_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Получить список активных стоп-заявок по счету.
+        /// GetStopOrders — получить список активных стоп-заявок по счету
         pub async fn get_stop_orders(
             &mut self,
             request: impl tonic::IntoRequest<super::GetStopOrdersRequest>,
@@ -12384,7 +12458,7 @@ pub mod stop_orders_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Отменить стоп-заявку.
+        /// CancelStopOrder — отменить стоп-заявку
         pub async fn cancel_stop_order(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelStopOrderRequest>,
