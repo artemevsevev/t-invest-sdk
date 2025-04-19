@@ -36,6 +36,21 @@ pub enum TInvestError {
     Status(#[from] tonic::Status),
 }
 
+#[derive(Debug, Clone, Copy)]
+pub enum Environment {
+    Production,
+    Sandbox,
+}
+
+impl Environment {
+    fn api_url(&self) -> &'static str {
+        match self {
+            Environment::Production => "https://invest-public-api.tinkoff.ru:443/",
+            Environment::Sandbox => "https://sandbox-invest-public-api.tinkoff.ru:443/",
+        }
+    }
+}
+
 impl Interceptor for TInvestInterceptor {
     fn call(&mut self, request: tonic::Request<()>) -> Result<tonic::Request<()>, tonic::Status> {
         let mut req = request;
@@ -89,16 +104,24 @@ pub struct TInvestSdk {
 }
 
 impl TInvestSdk {
-    pub async fn new(token: &str) -> Result<Self, TInvestError> {
+    pub async fn new_production(token: &str) -> Result<Self, TInvestError> {
+        Self::new(token, Environment::Production).await
+    }
+
+    pub async fn new_sandbox(token: &str) -> Result<Self, TInvestError> {
+        Self::new(token, Environment::Sandbox).await
+    }
+    
+    pub async fn new(token: &str, environment: Environment) -> Result<Self, TInvestError> {
         let tls = ClientTlsConfig::new().with_native_roots();
-        let channel = Channel::from_static("https://invest-public-api.tinkoff.ru:443/")
+        let channel = Channel::from_static(environment.api_url())
             .tls_config(tls)?
             .connect()
             .await?;
         let interceptor = TInvestInterceptor {
             token: String::from(token),
         };
-
+    
         Ok(Self {
             instruments_service_client: InstrumentsServiceClient::with_interceptor(
                 channel.clone(),
