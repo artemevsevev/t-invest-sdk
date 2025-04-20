@@ -10,7 +10,7 @@
 
 ```toml
 [dependencies]
-t-invest-sdk = "0.4.0"
+t-invest-sdk = "0.5.0"
 tokio = { version = "1.42.0", features = ["full"] }
 flume = "0.11.1"
 anyhow = "1.0.95"
@@ -31,7 +31,7 @@ use t_invest_sdk::TInvestSdk;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let token = env::var("API_TOKEN")?;
-    let sdk = TInvestSdk::new(&token).await?;
+    let sdk = TInvestSdk::new_sandbox(&token).await?;
     let mut instruments_service_client = sdk.instruments();
     let mut market_data_stream_service_client = sdk.market_data_stream();
 
