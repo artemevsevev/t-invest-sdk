@@ -24,7 +24,7 @@ pub mod api;
 pub mod google_api;
 
 /// Interceptor for T-Invest API requests.
-/// 
+///
 /// This struct implements the `Interceptor` trait from tonic to add
 /// necessary headers to each API request, including:
 /// - Authentication using the provided token
@@ -116,29 +116,11 @@ impl Interceptor for TInvestInterceptor {
 
 /// Main SDK client for interacting with the T-Invest API.
 ///
-/// This struct holds initialized clients for all available API services.
-/// Each service provides access to a specific part of the T-Invest API functionality.
-/// Use the factory methods to create a new instance for either production or sandbox environment.
+/// This struct holds channel and interceptor
 #[derive(Clone)]
 pub struct TInvestSdk {
-    instruments_service_client:
-        InstrumentsServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
-    market_data_service_client:
-        MarketDataServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
-    market_data_stream_service_client:
-        MarketDataStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
-    operations_service_client:
-        OperationsServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
-    operations_stream_service_client:
-        OperationsStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
-    orders_service_client: OrdersServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
-    orders_stream_service_client:
-        OrdersStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
-    sandbox_service_client: SandboxServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
-    signal_service_client: SignalServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
-    stop_orders_service_client:
-        StopOrdersServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
-    users_service_client: UsersServiceClient<InterceptedService<Channel, TInvestInterceptor>>,
+    channel: Channel,
+    interceptor: TInvestInterceptor,
 }
 
 impl TInvestSdk {
@@ -163,18 +145,25 @@ impl TInvestSdk {
     pub async fn new_sandbox(token: &str) -> Result<Self, TInvestError> {
         Self::new(token, Environment::Sandbox).await
     }
-    
-    /// Creates a new SDK instance connected to the specified environment.
+
+    /// Creates a new SDK instance with specified token and environment.
     ///
-    /// This method initializes all service clients with the provided authentication token
-    /// and connects to the appropriate API endpoint based on the environment.
+    /// This is the internal constructor used by the convenience methods
+    /// `new_production` and `new_sandbox`. It establishes a secure channel
+    /// to the T-Invest API using TLS and configures the authentication
+    /// interceptor with the provided token.
     ///
     /// # Arguments
     /// * `token` - API token for authentication
     /// * `environment` - The environment to connect to (Production or Sandbox)
     ///
     /// # Returns
-    /// A Result containing either the initialized SDK or an error
+    /// A Result containing either the initialized SDK or a TInvestError
+    ///
+    /// # Errors
+    /// Returns an error if:
+    /// - TLS configuration fails
+    /// - Channel connection cannot be established
     pub async fn new(token: &str, environment: Environment) -> Result<Self, TInvestError> {
         let tls = ClientTlsConfig::new().with_native_roots();
         let channel = Channel::from_static(environment.api_url())
@@ -184,52 +173,10 @@ impl TInvestSdk {
         let interceptor = TInvestInterceptor {
             token: String::from(token),
         };
-    
+
         Ok(Self {
-            instruments_service_client: InstrumentsServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
-            market_data_service_client: MarketDataServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
-            market_data_stream_service_client: MarketDataStreamServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
-            operations_service_client: OperationsServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
-            operations_stream_service_client: OperationsStreamServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
-            orders_service_client: OrdersServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
-            orders_stream_service_client: OrdersStreamServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
-            sandbox_service_client: SandboxServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
-            signal_service_client: SignalServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
-            stop_orders_service_client: StopOrdersServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
-            users_service_client: UsersServiceClient::with_interceptor(
-                channel.clone(),
-                interceptor.clone(),
-            ),
+            channel,
+            interceptor,
         })
     }
 
@@ -240,9 +187,9 @@ impl TInvestSdk {
     pub fn instruments(
         &self,
     ) -> InstrumentsServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.instruments_service_client.clone()
+        InstrumentsServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
-    
+
     /// Returns a client for the Market Data service.
     ///
     /// This service provides methods for requesting market data such as
@@ -250,9 +197,9 @@ impl TInvestSdk {
     pub fn market_data(
         &self,
     ) -> MarketDataServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.market_data_service_client.clone()
+        MarketDataServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
-    
+
     /// Returns a client for the Market Data Stream service.
     ///
     /// This service provides streaming access to real-time market data
@@ -260,9 +207,12 @@ impl TInvestSdk {
     pub fn market_data_stream(
         &self,
     ) -> MarketDataStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.market_data_stream_service_client.clone()
+        MarketDataStreamServiceClient::with_interceptor(
+            self.channel.clone(),
+            self.interceptor.clone(),
+        )
     }
-    
+
     /// Returns a client for the Operations service.
     ///
     /// This service provides methods for working with account operations
@@ -270,50 +220,53 @@ impl TInvestSdk {
     pub fn operations(
         &self,
     ) -> OperationsServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.operations_service_client.clone()
+        OperationsServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
-    
+
     /// Returns a client for the Operations Stream service.
     ///
     /// This service provides streaming access to account operations in real-time.
     pub fn operations_stream(
         &self,
     ) -> OperationsStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.operations_stream_service_client.clone()
+        OperationsStreamServiceClient::with_interceptor(
+            self.channel.clone(),
+            self.interceptor.clone(),
+        )
     }
-    
+
     /// Returns a client for the Orders service.
     ///
     /// This service provides methods for placing, canceling, and getting information
     /// about orders.
     pub fn orders(&self) -> OrdersServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.orders_service_client.clone()
+        OrdersServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
-    
+
     /// Returns a client for the Orders Stream service.
     ///
     /// This service provides streaming access to order status updates in real-time.
     pub fn orders_stream(
         &self,
     ) -> OrdersStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.orders_stream_service_client.clone()
+        OrdersStreamServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
-    
+
     /// Returns a client for the Sandbox service.
     ///
     /// This service provides methods for working with the sandbox (test) environment,
     /// including creating and removing sandbox accounts.
     pub fn sandbox(&self) -> SandboxServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.sandbox_service_client.clone()
+        SandboxServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
-    
+
     /// Returns a client for the Signal service.
     ///
     /// This service provides methods for working with investment signals and recommendations.
     pub fn signal(&self) -> SignalServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.signal_service_client.clone()
+        SignalServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
-    
+
     /// Returns a client for the Stop Orders service.
     ///
     /// This service provides methods for placing, canceling, and getting information
@@ -321,15 +274,15 @@ impl TInvestSdk {
     pub fn stop_orders(
         &self,
     ) -> StopOrdersServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.stop_orders_service_client.clone()
+        StopOrdersServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
-    
+
     /// Returns a client for the Users service.
     ///
     /// This service provides methods for getting information about user accounts
     /// and their details.
     pub fn users(&self) -> UsersServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
-        self.users_service_client.clone()
+        UsersServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
 }
 
