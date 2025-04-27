@@ -10,7 +10,7 @@
 
 ```toml
 [dependencies]
-t-invest-sdk = "0.5.0"
+t-invest-sdk = "0.6.0"
 tokio = { version = "1.42.0", features = ["full"] }
 flume = "0.11.1"
 anyhow = "1.0.95"
@@ -32,10 +32,9 @@ use t_invest_sdk::TInvestSdk;
 async fn main() -> anyhow::Result<()> {
     let token = env::var("API_TOKEN")?;
     let sdk = TInvestSdk::new_sandbox(&token).await?;
-    let mut instruments_service_client = sdk.instruments();
-    let mut market_data_stream_service_client = sdk.market_data_stream();
 
-    let find_instrument_response = instruments_service_client
+    let find_instrument_response = sdk
+        .instruments()
         .find_instrument(FindInstrumentRequest {
             query: "Т-Технологии".to_string(),
             instrument_kind: Some(InstrumentType::Share as i32),
@@ -68,7 +67,8 @@ async fn main() -> anyhow::Result<()> {
     };
     tx.send(request)?;
 
-    let response = market_data_stream_service_client
+    let response = sdk
+        .market_data_stream()
         .market_data_stream(rx.into_stream())
         .await?;
 
