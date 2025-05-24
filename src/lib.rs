@@ -356,6 +356,32 @@ pub fn timestamp_to_naive_date(timestamp: &prost_types::Timestamp) -> Result<Nai
     Ok(datetime.date_naive())
 }
 
+/// Converts a DateTime<Utc> to a prost_types::Timestamp.
+///
+/// This function converts a UTC datetime to a protobuf timestamp,
+/// preserving both seconds and nanoseconds precision.
+pub fn datetime_utc_to_timestamp(datetime: DateTime<Utc>) -> prost_types::Timestamp {
+    let seconds = datetime.timestamp();
+    let nanos = datetime.timestamp_subsec_nanos() as i32;
+    
+    prost_types::Timestamp { seconds, nanos }
+}
+
+/// Attempts to convert a prost_types::Timestamp to a DateTime<Utc>.
+///
+/// This function converts a protobuf timestamp to a UTC datetime,
+/// preserving both seconds and nanoseconds precision.
+/// Returns an error if the timestamp represents an invalid datetime.
+pub fn timestamp_to_datetime_utc(timestamp: &prost_types::Timestamp) -> Result<DateTime<Utc>, String> {
+    DateTime::<Utc>::from_timestamp(timestamp.seconds, timestamp.nanos as u32)
+        .ok_or_else(|| {
+            format!(
+                "Invalid timestamp: {} seconds, {} nanos",
+                timestamp.seconds, timestamp.nanos
+            )
+        })
+}
+
 #[cfg(test)]
 mod tests {
     use rust_decimal_macros::dec;
@@ -686,6 +712,158 @@ mod tests {
         for timestamp in timestamps_same_day {
             let converted_date = timestamp_to_naive_date(&timestamp).unwrap();
             assert_eq!(converted_date, base_date);
+        }
+    }
+
+    #[test]
+    fn datetime_utc_to_timestamp_conversion() {
+        // Test basic conversion
+        let datetime = DateTime::from_timestamp(1672531200, 0).unwrap(); // 2023-01-01 00:00:00 UTC
+        let timestamp = datetime_utc_to_timestamp(datetime);
+        assert_eq!(timestamp.seconds, 1672531200);
+        assert_eq!(timestamp.nanos, 0);
+
+        // Test with nanoseconds
+        let datetime = DateTime::from_timestamp(1672531200, 123456789).unwrap();
+        let timestamp = datetime_utc_to_timestamp(datetime);
+        assert_eq!(timestamp.seconds, 1672531200);
+        assert_eq!(timestamp.nanos, 123456789);
+
+        // Test edge cases
+        let datetime = DateTime::from_timestamp(0, 0).unwrap(); // Unix epoch
+        let timestamp = datetime_utc_to_timestamp(datetime);
+        assert_eq!(timestamp.seconds, 0);
+        assert_eq!(timestamp.nanos, 0);
+
+        // Test negative timestamp (before Unix epoch)
+        let datetime = DateTime::from_timestamp(-86400, 0).unwrap(); // 1969-12-31 00:00:00 UTC
+        let timestamp = datetime_utc_to_timestamp(datetime);
+        assert_eq!(timestamp.seconds, -86400);
+        assert_eq!(timestamp.nanos, 0);
+    }
+
+    #[test]
+    fn timestamp_to_datetime_utc_conversion() {
+        // Test basic conversion
+        let timestamp = prost_types::Timestamp {
+            seconds: 1672531200,
+            nanos: 0,
+        };
+        let datetime = timestamp_to_datetime_utc(&timestamp).unwrap();
+        assert_eq!(datetime.timestamp(), 1672531200);
+        assert_eq!(datetime.timestamp_subsec_nanos(), 0);
+
+        // Test with nanoseconds
+        let timestamp = prost_types::Timestamp {
+            seconds: 1672531200,
+            nanos: 123456789,
+        };
+        let datetime = timestamp_to_datetime_utc(&timestamp).unwrap();
+        assert_eq!(datetime.timestamp(), 1672531200);
+        assert_eq!(datetime.timestamp_subsec_nanos(), 123456789);
+
+        // Test Unix epoch
+        let timestamp = prost_types::Timestamp {
+            seconds: 0,
+            nanos: 0,
+        };
+        let datetime = timestamp_to_datetime_utc(&timestamp).unwrap();
+        assert_eq!(datetime.timestamp(), 0);
+        assert_eq!(datetime.timestamp_subsec_nanos(), 0);
+
+        // Test negative timestamp (before Unix epoch)
+        let timestamp = prost_types::Timestamp {
+            seconds: -86400,
+            nanos: 0,
+        };
+        let datetime = timestamp_to_datetime_utc(&timestamp).unwrap();
+        assert_eq!(datetime.timestamp(), -86400);
+        assert_eq!(datetime.timestamp_subsec_nanos(), 0);
+    }
+
+    #[test]
+    fn timestamp_to_datetime_utc_error_cases() {
+        // Test invalid timestamp (too far in the future)
+        let invalid_timestamp = prost_types::Timestamp {
+            seconds: i64::MAX,
+            nanos: 0,
+        };
+        let result = timestamp_to_datetime_utc(&invalid_timestamp);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("Invalid timestamp"));
+
+        // Test invalid nanoseconds (too large)
+        let invalid_nanos = prost_types::Timestamp {
+            seconds: 0,
+            nanos: 2_000_000_000, // More than 1 second worth of nanoseconds
+        };
+        let result = timestamp_to_datetime_utc(&invalid_nanos);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("Invalid timestamp"));
+
+        // Test negative nanoseconds
+        let negative_nanos = prost_types::Timestamp {
+            seconds: 0,
+            nanos: -1,
+        };
+        let result = timestamp_to_datetime_utc(&negative_nanos);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("Invalid timestamp"));
+    }
+
+    #[test]
+    fn round_trip_datetime_utc_conversion() {
+        // Test that converting datetime -> timestamp -> datetime gives the same result
+        let test_datetimes = vec![
+            DateTime::from_timestamp(0, 0).unwrap(), // Unix epoch
+            DateTime::from_timestamp(1672531200, 0).unwrap(), // 2023-01-01 00:00:00 UTC
+            DateTime::from_timestamp(1672531200, 123456789).unwrap(), // With nanoseconds
+            DateTime::from_timestamp(-86400, 0).unwrap(), // Before Unix epoch
+            DateTime::from_timestamp(1703980800, 999999999).unwrap(), // 2023-12-31 00:00:00.999999999 UTC
+        ];
+
+        for original_datetime in test_datetimes {
+            let timestamp = datetime_utc_to_timestamp(original_datetime);
+            let converted_back = timestamp_to_datetime_utc(&timestamp).unwrap();
+            assert_eq!(original_datetime, converted_back);
+        }
+    }
+
+    #[test]
+    fn datetime_utc_preserves_precision() {
+        // Test that conversion preserves nanosecond precision
+        let datetime = DateTime::from_timestamp(1672531200, 123456789).unwrap();
+        let timestamp = datetime_utc_to_timestamp(datetime);
+        
+        assert_eq!(timestamp.seconds, 1672531200);
+        assert_eq!(timestamp.nanos, 123456789);
+        
+        let converted_back = timestamp_to_datetime_utc(&timestamp).unwrap();
+        assert_eq!(converted_back.timestamp(), 1672531200);
+        assert_eq!(converted_back.timestamp_subsec_nanos(), 123456789);
+        assert_eq!(datetime, converted_back);
+    }
+
+    #[test]
+    fn datetime_utc_conversion_different_times() {
+        // Test various times throughout a day
+        let base_timestamp = 1672531200; // 2023-01-01 00:00:00 UTC
+        
+        let test_times = vec![
+            (base_timestamp, 0), // Midnight
+            (base_timestamp + 3600, 0), // 1 AM
+            (base_timestamp + 43200, 500000000), // Noon with 0.5 seconds
+            (base_timestamp + 82800, 999999999), // 11 PM with max nanoseconds
+        ];
+
+        for (seconds, nanos) in test_times {
+            let original_datetime = DateTime::from_timestamp(seconds, nanos).unwrap();
+            let timestamp = datetime_utc_to_timestamp(original_datetime);
+            let converted_back = timestamp_to_datetime_utc(&timestamp).unwrap();
+            
+            assert_eq!(original_datetime, converted_back);
+            assert_eq!(timestamp.seconds, seconds);
+            assert_eq!(timestamp.nanos, nanos as i32);
         }
     }
 }
