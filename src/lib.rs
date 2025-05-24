@@ -85,17 +85,18 @@ impl Interceptor for TInvestInterceptor {
     ///
     /// # Returns
     /// The modified request with added headers or an error status
-    fn call(&mut self, request: tonic::Request<()>) -> Result<tonic::Request<()>, tonic::Status> {
-        let mut req = request;
-
-        req.metadata_mut().append(
+    fn call(
+        &mut self,
+        mut request: tonic::Request<()>,
+    ) -> Result<tonic::Request<()>, tonic::Status> {
+        request.metadata_mut().append(
             "authorization",
             format!("bearer {}", self.token)
                 .parse()
                 .map_err(|_| tonic::Status::internal("Invalid authorization header"))?,
         );
 
-        req.metadata_mut().append(
+        request.metadata_mut().append(
             "x-tracking-id",
             uuid::Uuid::new_v4()
                 .to_string()
@@ -103,14 +104,14 @@ impl Interceptor for TInvestInterceptor {
                 .map_err(|_| tonic::Status::internal("Invalid x-tracking-id"))?,
         );
 
-        req.metadata_mut().append(
+        request.metadata_mut().append(
             "x-app-name",
             "artemevsevev.t-invest-sdk"
                 .parse()
                 .map_err(|_| tonic::Status::internal("Invalid x-app-name"))?,
         );
 
-        Ok(req)
+        Ok(request)
     }
 }
 
