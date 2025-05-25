@@ -10,7 +10,7 @@
 
 ```toml
 [dependencies]
-t-invest-sdk = "0.6.1"
+t-invest-sdk = "0.7.1"
 tokio = { version = "1.42.0", features = ["full"] }
 flume = "0.11.1"
 anyhow = "1.0.95"

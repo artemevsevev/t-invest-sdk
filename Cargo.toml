@@ -1,13 +1,13 @@
 [package]
 name = "t-invest-sdk"
-version = "0.7.0"
+version = "0.7.1"
 edition = "2021"
 authors = ["Artem Evsevev <artem@qrsoft.ru>"]
 description = "T-Bank Invest API SDK. Клиент для работы с T-Invest API Т-Банка (Tinkoff)."
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/artemevsevev/t-invest-sdk"
-keywords = ["trading", "tbank", "tinvest", "finance", "sdk"]
+keywords = ["trading", "tbank", "tinvest", "tinkoff", "sdk"]
 categories = ["finance"]
 exclude = ["investAPI/*"]
 
