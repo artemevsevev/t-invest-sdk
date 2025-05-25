@@ -186,9 +186,11 @@ impl TInvestSdk {
     /// Этот сервис предоставляет методы для работы с финансовыми инструментами,
     /// включая акции, облигации, ETF, валюты и фьючерсы.
     ///
-    /// Описание: https://developer.tbank.ru/invest/services/instruments/head-instruments
-    ///
-    /// Методы: https://developer.tbank.ru/invest/services/instruments/methods
+    /// Документация:
+    ///   - [Описание](https://developer.tbank.ru/invest/services/instruments/head-instruments)
+    ///   - [gRPC-методы](https://developer.tbank.ru/invest/services/instruments/methods)
+    ///   - [Глоссарий и дополнительная информация о методах сервиса инструментов](https://developer.tbank.ru/invest/services/instruments/more-instrument)
+    ///   - [FAQ](https://developer.tbank.ru/invest/services/instruments/faq_instruments)
     pub fn instruments(
         &self,
     ) -> InstrumentsServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
