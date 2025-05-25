@@ -23,23 +23,23 @@ pub mod api;
 #[path = "google.api.rs"]
 pub mod google_api;
 
-/// Interceptor for T-Invest API requests.
+/// Перехватчик для запросов T-Invest API.
 ///
-/// This struct implements the `Interceptor` trait from tonic to add
-/// necessary headers to each API request, including:
-/// - Authentication using the provided token
-/// - Request tracking ID
-/// - Application name
+/// Эта структура реализует трейт `Interceptor` из tonic для добавления
+/// необходимых заголовков к каждому API запросу, включая:
+/// - Аутентификацию с использованием предоставленного токена
+/// - ID отслеживания запроса
+/// - Имя приложения
 #[derive(Debug, Clone)]
 pub struct TInvestInterceptor {
     pub token: String,
 }
 
-/// Errors that can occur when interacting with the T-Invest API.
+/// Ошибки, которые могут возникнуть при взаимодействии с T-Invest API.
 ///
-/// This enum represents the possible error types that can occur:
-/// - `Transport`: Errors related to network connectivity or transport layer
-/// - `Status`: Errors returned by the API service itself
+/// Это перечисление представляет возможные типы ошибок, которые могут возникнуть:
+/// - `Transport`: Ошибки, связанные с сетевым подключением или транспортным уровнем
+/// - `Status`: Ошибки, возвращаемые самим API сервисом
 #[derive(Error, Debug)]
 pub enum TInvestError {
     #[error(transparent)]
@@ -48,11 +48,11 @@ pub enum TInvestError {
     Status(#[from] tonic::Status),
 }
 
-/// Represents the environment to connect to for the T-Invest API.
+/// Представляет среду для подключения к T-Invest API.
 ///
-/// There are two possible environments:
-/// - `Production`: The live production environment with real accounts and data
-/// - `Sandbox`: A testing environment that simulates the production API
+/// Существует две возможные среды:
+/// - `Production`: Живая продакшн среда с реальными счетами и данными
+/// - `Sandbox`: Тестовая среда, которая симулирует продакшн API
 #[derive(Debug, Clone, Copy)]
 pub enum Environment {
     Production,
@@ -60,10 +60,10 @@ pub enum Environment {
 }
 
 impl Environment {
-    /// Returns the base URL for the API based on the selected environment.
+    /// Возвращает базовый URL для API на основе выбранной среды.
     ///
-    /// # Returns
-    /// A static string containing the complete base URL for API requests.
+    /// # Возвращает
+    /// Статическую строку, содержащую полный базовый URL для API запросов.
     fn api_url(&self) -> &'static str {
         match self {
             Environment::Production => "https://invest-public-api.tinkoff.ru:443/",
@@ -73,18 +73,18 @@ impl Environment {
 }
 
 impl Interceptor for TInvestInterceptor {
-    /// Intercepts each request to add necessary headers before it's sent to the API.
+    /// Перехватывает каждый запрос для добавления необходимых заголовков перед отправкой в API.
     ///
-    /// This implementation adds the following headers to each request:
-    /// - `authorization`: Bearer token for authentication
-    /// - `x-tracking-id`: A unique UUID for request tracking
-    /// - `x-app-name`: The application identifier
+    /// Эта реализация добавляет следующие заголовки к каждому запросу:
+    /// - `authorization`: Bearer токен для аутентификации
+    /// - `x-tracking-id`: Уникальный UUID для отслеживания запроса
+    /// - `x-app-name`: Идентификатор приложения
     ///
-    /// # Arguments
-    /// * `request` - The original request to be modified
+    /// # Аргументы
+    /// * `request` - Исходный запрос, который нужно изменить
     ///
-    /// # Returns
-    /// The modified request with added headers or an error status
+    /// # Возвращает
+    /// Изменённый запрос с добавленными заголовками или статус ошибки
     fn call(
         &mut self,
         mut request: tonic::Request<()>,
@@ -115,9 +115,9 @@ impl Interceptor for TInvestInterceptor {
     }
 }
 
-/// Main SDK client for interacting with the T-Invest API.
+/// Основной SDK клиент для взаимодействия с T-Invest API.
 ///
-/// This struct holds channel and interceptor
+/// Эта структура содержит канал и перехватчик
 #[derive(Clone)]
 pub struct TInvestSdk {
     channel: Channel,
@@ -125,46 +125,46 @@ pub struct TInvestSdk {
 }
 
 impl TInvestSdk {
-    /// Creates a new SDK instance connected to the production environment.
+    /// Создаёт новый экземпляр SDK, подключённый к продакшн среде.
     ///
-    /// # Arguments
-    /// * `token` - API token for authentication
+    /// # Аргументы
+    /// * `token` - API токен для аутентификации
     ///
-    /// # Returns
-    /// A Result containing either the initialized SDK or an error
+    /// # Возвращает
+    /// Result, содержащий либо инициализированный SDK, либо ошибку
     pub async fn new_production(token: &str) -> Result<Self, TInvestError> {
         Self::new(token, Environment::Production).await
     }
 
-    /// Creates a new SDK instance connected to the sandbox (testing) environment.
+    /// Создаёт новый экземпляр SDK, подключённый к sandbox (тестовой) среде.
     ///
-    /// # Arguments
-    /// * `token` - API token for authentication
+    /// # Аргументы
+    /// * `token` - API токен для аутентификации
     ///
-    /// # Returns
-    /// A Result containing either the initialized SDK or an error
+    /// # Возвращает
+    /// Result, содержащий либо инициализированный SDK, либо ошибку
     pub async fn new_sandbox(token: &str) -> Result<Self, TInvestError> {
         Self::new(token, Environment::Sandbox).await
     }
 
-    /// Creates a new SDK instance with specified token and environment.
+    /// Создаёт новый экземпляр SDK с указанным токеном и средой.
     ///
-    /// This is the internal constructor used by the convenience methods
-    /// `new_production` and `new_sandbox`. It establishes a secure channel
-    /// to the T-Invest API using TLS and configures the authentication
-    /// interceptor with the provided token.
+    /// Это внутренний конструктор, используемый удобными методами
+    /// `new_production` и `new_sandbox`. Он устанавливает безопасный канал
+    /// к T-Invest API, используя TLS, и настраивает перехватчик аутентификации
+    /// с предоставленным токеном.
     ///
-    /// # Arguments
-    /// * `token` - API token for authentication
-    /// * `environment` - The environment to connect to (Production or Sandbox)
+    /// # Аргументы
+    /// * `token` - API токен для аутентификации
+    /// * `environment` - Среда для подключения (Production или Sandbox)
     ///
-    /// # Returns
-    /// A Result containing either the initialized SDK or a TInvestError
+    /// # Возвращает
+    /// Result, содержащий либо инициализированный SDK, либо TInvestError
     ///
-    /// # Errors
-    /// Returns an error if:
-    /// - TLS configuration fails
-    /// - Channel connection cannot be established
+    /// # Ошибки
+    /// Возвращает ошибку, если:
+    /// - Не удалось настроить TLS конфигурацию
+    /// - Невозможно установить соединение с каналом
     pub async fn new(token: &str, environment: Environment) -> Result<Self, TInvestError> {
         let tls = ClientTlsConfig::new().with_native_roots();
         let channel = Channel::from_static(environment.api_url())
@@ -181,30 +181,30 @@ impl TInvestSdk {
         })
     }
 
-    /// Returns a client for the Instruments service.
+    /// Возвращает клиент для сервиса Instruments.
     ///
-    /// This service provides methods for working with financial instruments,
-    /// including stocks, bonds, ETFs, currencies, and futures.
+    /// Этот сервис предоставляет методы для работы с финансовыми инструментами,
+    /// включая акции, облигации, ETF, валюты и фьючерсы.
     pub fn instruments(
         &self,
     ) -> InstrumentsServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         InstrumentsServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
 
-    /// Returns a client for the Market Data service.
+    /// Возвращает клиент для сервиса Market Data.
     ///
-    /// This service provides methods for requesting market data such as
-    /// candles, orderbooks, and last prices.
+    /// Этот сервис предоставляет методы для запроса рыночных данных, таких как
+    /// свечи, стаканы и последние цены.
     pub fn market_data(
         &self,
     ) -> MarketDataServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         MarketDataServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
 
-    /// Returns a client for the Market Data Stream service.
+    /// Возвращает клиент для сервиса Market Data Stream.
     ///
-    /// This service provides streaming access to real-time market data
-    /// including candles, orderbooks, and trades.
+    /// Этот сервис предоставляет потоковый доступ к рыночным данным в реальном времени,
+    /// включая свечи, стаканы и сделки.
     pub fn market_data_stream(
         &self,
     ) -> MarketDataStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
@@ -214,19 +214,19 @@ impl TInvestSdk {
         )
     }
 
-    /// Returns a client for the Operations service.
+    /// Возвращает клиент для сервиса Operations.
     ///
-    /// This service provides methods for working with account operations
-    /// such as getting operation history and operation details.
+    /// Этот сервис предоставляет методы для работы с операциями по счёту,
+    /// такими как получение истории операций и деталей операций.
     pub fn operations(
         &self,
     ) -> OperationsServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         OperationsServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
 
-    /// Returns a client for the Operations Stream service.
+    /// Возвращает клиент для сервиса Operations Stream.
     ///
-    /// This service provides streaming access to account operations in real-time.
+    /// Этот сервис предоставляет потоковый доступ к операциям по счёту в реальном времени.
     pub fn operations_stream(
         &self,
     ) -> OperationsStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
@@ -236,81 +236,81 @@ impl TInvestSdk {
         )
     }
 
-    /// Returns a client for the Orders service.
+    /// Возвращает клиент для сервиса Orders.
     ///
-    /// This service provides methods for placing, canceling, and getting information
-    /// about orders.
+    /// Этот сервис предоставляет методы для размещения, отмены и получения информации
+    /// о заявках.
     pub fn orders(&self) -> OrdersServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         OrdersServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
 
-    /// Returns a client for the Orders Stream service.
+    /// Возвращает клиент для сервиса Orders Stream.
     ///
-    /// This service provides streaming access to order status updates in real-time.
+    /// Этот сервис предоставляет потоковый доступ к обновлениям статуса заявок в реальном времени.
     pub fn orders_stream(
         &self,
     ) -> OrdersStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         OrdersStreamServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
 
-    /// Returns a client for the Sandbox service.
+    /// Возвращает клиент для сервиса Sandbox.
     ///
-    /// This service provides methods for working with the sandbox (test) environment,
-    /// including creating and removing sandbox accounts.
+    /// Этот сервис предоставляет методы для работы с sandbox (тестовой) средой,
+    /// включая создание и удаление sandbox счетов.
     pub fn sandbox(&self) -> SandboxServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         SandboxServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
 
-    /// Returns a client for the Signal service.
+    /// Возвращает клиент для сервиса Signal.
     ///
-    /// This service provides methods for working with investment signals and recommendations.
+    /// Этот сервис предоставляет методы для работы с инвестиционными сигналами и рекомендациями.
     pub fn signal(&self) -> SignalServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         SignalServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
 
-    /// Returns a client for the Stop Orders service.
+    /// Возвращает клиент для сервиса Stop Orders.
     ///
-    /// This service provides methods for placing, canceling, and getting information
-    /// about stop orders.
+    /// Этот сервис предоставляет методы для размещения, отмены и получения информации
+    /// о стоп-заявках.
     pub fn stop_orders(
         &self,
     ) -> StopOrdersServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         StopOrdersServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
 
-    /// Returns a client for the Users service.
+    /// Возвращает клиент для сервиса Users.
     ///
-    /// This service provides methods for getting information about user accounts
-    /// and their details.
+    /// Этот сервис предоставляет методы для получения информации о пользовательских счетах
+    /// и их деталях.
     pub fn users(&self) -> UsersServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         UsersServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
 }
 
-/// Converts a Quotation to a Decimal.
+/// Преобразует Quotation в Decimal.
 ///
-/// The Quotation type represents a number as an integer part (units) and a fractional part (nano).
-/// This implementation combines them into a single Decimal value.
+/// Тип Quotation представляет число как целую часть (units) и дробную часть (nano).
+/// Эта реализация объединяет их в единое значение Decimal.
 impl From<Quotation> for Decimal {
     fn from(quotation: Quotation) -> Self {
         Decimal::new(quotation.units, 0) + Decimal::new(quotation.nano as i64, 9).normalize()
     }
 }
 
-/// Converts a MoneyValue to a Decimal.
+/// Преобразует MoneyValue в Decimal.
 ///
-/// The MoneyValue type represents a monetary amount as an integer part (units) and a fractional part (nano).
-/// This implementation combines them into a single Decimal value, ignoring the currency field.
+/// Тип MoneyValue представляет денежную сумму как целую часть (units) и дробную часть (nano).
+/// Эта реализация объединяет их в единое значение Decimal, игнорируя поле валюты.
 impl From<MoneyValue> for Decimal {
     fn from(money_value: MoneyValue) -> Self {
         Decimal::new(money_value.units, 0) + Decimal::new(money_value.nano as i64, 9).normalize()
     }
 }
 
-/// Attempts to convert a Decimal to a Quotation.
+/// Пытается преобразовать Decimal в Quotation.
 ///
-/// This implementation separates a Decimal value into integer units and nano parts
-/// to create a Quotation. It will return an error if the conversion is not possible.
+/// Эта реализация разделяет значение Decimal на целые единицы и нано-части
+/// для создания Quotation. Возвращает ошибку, если преобразование невозможно.
 impl TryFrom<Decimal> for Quotation {
     type Error = String;
 
