@@ -118,6 +118,10 @@ impl Interceptor for TInvestInterceptor {
 /// Основной SDK клиент для взаимодействия с T-Invest API.
 ///
 /// Эта структура содержит канал и перехватчик
+///
+/// # Документация
+/// - [Описание](https://developer.tbank.ru/invest/intro/intro)
+/// - [Получить токен](https://developer.tbank.ru/invest/intro/intro/token#получить-токен)
 #[derive(Clone)]
 pub struct TInvestSdk {
     channel: Channel,
@@ -186,8 +190,8 @@ impl TInvestSdk {
     /// Этот сервис предоставляет методы для работы с финансовыми инструментами,
     /// включая акции, облигации, ETF, валюты и фьючерсы.
     ///
-    /// Документация:
-    ///   - [Описание](https://developer.tbank.ru/invest/services/instruments/head-instruments)
+    /// # Документация:
+    ///   - [Описание сервиса](https://developer.tbank.ru/invest/services/instruments/head-instruments)
     ///   - [gRPC-методы](https://developer.tbank.ru/invest/services/instruments/methods)
     ///   - [Глоссарий и дополнительная информация о методах сервиса инструментов](https://developer.tbank.ru/invest/services/instruments/more-instrument)
     ///   - [FAQ](https://developer.tbank.ru/invest/services/instruments/faq_instruments)
@@ -202,9 +206,10 @@ impl TInvestSdk {
     /// Этот сервис предоставляет методы для запроса рыночных данных, таких как
     /// свечи, стаканы и последние цены.
     ///
-    /// Описание: https://developer.tbank.ru/invest/services/quotes/head-marketdata
-    ///
-    /// Методы: https://developer.tbank.ru/invest/services/quotes/marketdata
+    /// # Документация:
+    /// - [Описание сервиса](https://developer.tbank.ru/invest/services/quotes/head-marketdata)
+    /// - [gRPC-методы](https://developer.tbank.ru/invest/services/quotes/marketdata)
+    /// - [FAQ](https://developer.tbank.ru/invest/services/quotes/faq_marketdata)
     pub fn market_data(
         &self,
     ) -> MarketDataServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
@@ -216,9 +221,10 @@ impl TInvestSdk {
     /// Этот сервис предоставляет потоковый доступ к рыночным данным в реальном времени,
     /// включая свечи, стаканы и сделки.
     ///
-    /// Описание: https://developer.tbank.ru/invest/services/quotes/head-marketdata
-    ///
-    /// Методы: https://developer.tbank.ru/invest/services/quotes/marketdata
+    /// # Документация:
+    /// - [Описание сервиса](https://developer.tbank.ru/invest/services/quotes/head-marketdata)
+    /// - [gRPC-методы](https://developer.tbank.ru/invest/services/quotes/marketdata)
+    /// - [FAQ](https://developer.tbank.ru/invest/services/quotes/faq_marketdata)
     pub fn market_data_stream(
         &self,
     ) -> MarketDataStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
@@ -233,9 +239,11 @@ impl TInvestSdk {
     /// Этот сервис предоставляет методы для работы с операциями по счёту,
     /// такими как получение истории операций и деталей операций.
     ///
-    /// Описание: https://developer.tbank.ru/invest/services/operations/head-operations
-    ///
-    /// Методы: https://developer.tbank.ru/invest/services/operations/methods
+    /// # Документация:
+    /// - [Описание сервиса](https://developer.tbank.ru/invest/services/operations/head-operations)
+    /// - [Особенности методов сервиса операций](https://developer.tbank.ru/invest/services/operations/operations_problems)
+    /// - [gRPC-методы](https://developer.tbank.ru/invest/services/operations/methods)
+    /// - [FAQ](https://developer.tbank.ru/invest/services/operations/faq_operations)
     pub fn operations(
         &self,
     ) -> OperationsServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
@@ -246,9 +254,11 @@ impl TInvestSdk {
     ///
     /// Этот сервис предоставляет потоковый доступ к операциям по счёту в реальном времени.
     ///
-    /// Описание: https://developer.tbank.ru/invest/services/operations/head-operations
-    ///
-    /// Методы: https://developer.tbank.ru/invest/services/operations/methods
+    /// # Документация:
+    /// - [Описание сервиса](https://developer.tbank.ru/invest/services/operations/head-operations)
+    /// - [Особенности методов сервиса операций](https://developer.tbank.ru/invest/services/operations/operations_problems)
+    /// - [gRPC-методы](https://developer.tbank.ru/invest/services/operations/methods)
+    /// - [FAQ](https://developer.tbank.ru/invest/services/operations/faq_operations)
     pub fn operations_stream(
         &self,
     ) -> OperationsStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
@@ -263,9 +273,11 @@ impl TInvestSdk {
     /// Этот сервис предоставляет методы для размещения, отмены и получения информации
     /// о заявках.
     ///
-    /// Описание: https://developer.tbank.ru/invest/services/orders/head-orders
-    ///
-    /// Методы: https://developer.tbank.ru/invest/services/orders/methods
+    /// # Документация:
+    /// - [Описание сервиса](https://developer.tbank.ru/invest/services/orders/head-orders)
+    /// - [gRPC-методы](https://developer.tbank.ru/invest/services/orders/methods)
+    /// - [Асинхронный метод выставления заявок](https://developer.tbank.ru/invest/services/orders/async)
+    /// - [FAQ](https://developer.tbank.ru/invest/services/orders/faq_orders)
     pub fn orders(&self) -> OrdersServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         OrdersServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
@@ -274,9 +286,11 @@ impl TInvestSdk {
     ///
     /// Этот сервис предоставляет потоковый доступ к обновлениям статуса заявок в реальном времени.
     ///
-    /// Описание: https://developer.tbank.ru/invest/services/orders/head-orders
-    ///
-    /// Методы: https://developer.tbank.ru/invest/services/orders/methods
+    /// # Документация:
+    /// - [Описание сервиса](https://developer.tbank.ru/invest/services/orders/head-orders)
+    /// - [gRPC-методы](https://developer.tbank.ru/invest/services/orders/methods)
+    /// - [Стрим заявок](https://developer.tbank.ru/invest/services/orders/orders_state_stream)
+    /// - [FAQ](https://developer.tbank.ru/invest/services/orders/faq_orders)
     pub fn orders_stream(
         &self,
     ) -> OrdersStreamServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
@@ -287,6 +301,12 @@ impl TInvestSdk {
     ///
     /// Этот сервис предоставляет методы для работы с sandbox (тестовой) средой,
     /// включая создание и удаление sandbox счетов.
+    ///
+    /// # Документация:
+    /// - [Описание сервиса](https://developer.tbank.ru/invest/intro/developer/sandbox/)
+    /// - [gRPC-методы](https://developer.tbank.ru/invest/intro/developer/sandbox/methods)
+    /// - [Песочница и prod](https://developer.tbank.ru/invest/intro/developer/sandbox/url_difference)
+    /// - [FAQ](https://developer.tbank.ru/invest/intro/developer/sandbox/faq_sandbox)
     pub fn sandbox(&self) -> SandboxServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         SandboxServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
@@ -295,9 +315,9 @@ impl TInvestSdk {
     ///
     /// Этот сервис предоставляет методы для работы с инвестиционными сигналами и рекомендациями.
     ///
-    /// Описание: https://developer.tbank.ru/invest/services/signals/head-signals
-    ///
-    /// Методы: https://developer.tbank.ru/invest/services/signals/methods
+    /// # Документация:
+    /// - [Описание сервиса](https://developer.tbank.ru/invest/services/signals/head-signals)
+    /// - [gRPC-методы](https://developer.tbank.ru/invest/services/signals/methods)
     pub fn signal(&self) -> SignalServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         SignalServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
@@ -307,9 +327,10 @@ impl TInvestSdk {
     /// Этот сервис предоставляет методы для размещения, отмены и получения информации
     /// о стоп-заявках.
     ///
-    /// Описание: https://developer.tbank.ru/invest/services/stop-orders/head-stoporders
-    ///
-    /// Методы: https://developer.tbank.ru/invest/services/stop-orders/stoporders
+    /// # Документация:
+    /// - [Описание сервиса](https://developer.tbank.ru/invest/services/stop-orders/head-stoporders)
+    /// - [gRPC-методы](https://developer.tbank.ru/invest/services/stop-orders/stoporders)
+    /// - [FAQ](https://developer.tbank.ru/invest/services/stop-orders/faq_stoporders)
     pub fn stop_orders(
         &self,
     ) -> StopOrdersServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
@@ -321,9 +342,10 @@ impl TInvestSdk {
     /// Этот сервис предоставляет методы для получения информации о пользовательских счетах
     /// и их деталях.
     ///
-    /// Описание: https://developer.tbank.ru/invest/services/accounts/head-account
-    ///
-    /// Методы: https://developer.tbank.ru/invest/services/accounts/users
+    /// # Документация:
+    /// - [Описание сервиса](https://developer.tbank.ru/invest/services/accounts/head-account)
+    /// - [gRPC-методы](https://developer.tbank.ru/invest/services/accounts/users)
+    /// - [FAQ](https://developer.tbank.ru/invest/services/accounts/faq_users)
     pub fn users(&self) -> UsersServiceClient<InterceptedService<Channel, TInvestInterceptor>> {
         UsersServiceClient::with_interceptor(self.channel.clone(), self.interceptor.clone())
     }
