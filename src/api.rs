@@ -11942,6 +11942,9 @@ pub struct PostStopOrderRequest {
     /// Идентификатор запроса выставления поручения для целей идемпотентности в формате `UID`. Максимальная длина — 36 символов.
     #[prost(string, tag = "15")]
     pub order_id: ::prost::alloc::string::String,
+    /// Согласие на выставление заявки, которая может привести к непокрытой позиции, по умолчанию false.
+    #[prost(bool, tag = "16")]
+    pub confirm_margin_trade: bool,
 }
 /// Nested message and enum types in `PostStopOrderRequest`.
 pub mod post_stop_order_request {
