@@ -1,6 +1,6 @@
 # T-Invest API Rust SDK
 
-Версия API [1.36](https://github.com/RussianInvestments/investAPI/tree/274ed498876d30e0bf5440bddfbb0a86d9b9c54b)
+Версия API [1.36.1](https://github.com/RussianInvestments/investAPI/tree/0ad61fa19ebfdff07c6720a26409b230429ea429)
 
 [Документация для разработчиков](https://developer.tbank.ru/invest/intro/intro)
 
@@ -10,7 +10,7 @@
 
 ```toml
 [dependencies]
-t-invest-sdk = "0.8.0"
+t-invest-sdk = "0.9.0"
 tokio = { version = "1.42.0", features = ["full"] }
 flume = "0.11.1"
 anyhow = "1.0.95"
