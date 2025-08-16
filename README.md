@@ -1,6 +1,6 @@
 # T-Invest API Rust SDK
 
-Версия API [1.36.1](https://github.com/RussianInvestments/investAPI/tree/0ad61fa19ebfdff07c6720a26409b230429ea429)
+Версия API [1.40](https://github.com/RussianInvestments/investAPI/tree/29f829ed293ca3d68428c3abf12be9f8ea910806)
 
 [Документация для разработчиков](https://developer.tbank.ru/invest/intro/intro)
 
