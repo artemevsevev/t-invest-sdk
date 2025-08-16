@@ -1,7 +1,7 @@
 [package]
 name = "t-invest-sdk"
-version = "0.10.0"
-edition = "2021"
+version = "0.11.0"
+edition = "2024"
 authors = ["Artem Evsevev <artem@qrsoft.ru>"]
 description = "T-Bank Invest API SDK. Клиент для работы с T-Invest API Т-Банка (Tinkoff)."
 license = "MIT"

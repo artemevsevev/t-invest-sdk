@@ -10,10 +10,10 @@
 
 ```toml
 [dependencies]
-t-invest-sdk = "0.10.0"
-tokio = { version = "1.42.0", features = ["full"] }
+t-invest-sdk = "0.11.0"
+tokio = { version = "1.47.1", features = ["full"] }
 flume = "0.11.1"
-anyhow = "1.0.95"
+anyhow = "1.0.99"
 ```
 
 ## main.rs
