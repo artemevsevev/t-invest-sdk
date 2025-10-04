@@ -964,6 +964,20 @@ pub struct SharesResponse {
     #[prost(message, repeated, tag = "1")]
     pub instruments: ::prost::alloc::vec::Vec<Share>,
 }
+/// Данные по структурной ноте.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StructuredNoteResponse {
+    /// Информация о структурной ноте.
+    #[prost(message, optional, tag = "1")]
+    pub instrument: ::core::option::Option<StructuredNote>,
+}
+/// Данные по структурным нотам.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StructuredNotesResponse {
+    /// Массив структурных нот.
+    #[prost(message, repeated, tag = "1")]
+    pub instruments: ::prost::alloc::vec::Vec<StructuredNote>,
+}
 /// Объект передачи информации об облигации.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Bond {
@@ -1692,6 +1706,344 @@ pub struct Share {
     /// Ставка риска в шорт с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](<https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5>).
     #[prost(message, optional, tag = "91")]
     pub dshort_client: ::core::option::Option<Quotation>,
+}
+/// Объект передачи информации о структурной ноте.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StructuredNote {
+    /// Уникальный идентификатор инструмента.
+    #[prost(string, tag = "1")]
+    pub uid: ::prost::alloc::string::String,
+    /// FIGI-идентификатор инструмента.
+    #[prost(string, tag = "2")]
+    pub figi: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "3")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "4")]
+    pub class_code: ::prost::alloc::string::String,
+    /// ISIN-идентификатор инструмента.
+    #[prost(string, tag = "5")]
+    pub isin: ::prost::alloc::string::String,
+    /// Название инструмента.
+    #[prost(string, tag = "6")]
+    pub name: ::prost::alloc::string::String,
+    /// Уникальный идентификатор актива.
+    #[prost(string, tag = "7")]
+    pub asset_uid: ::prost::alloc::string::String,
+    /// Уникальный идентификатор позиции.
+    #[prost(string, tag = "8")]
+    pub position_uid: ::prost::alloc::string::String,
+    /// Шаг цены.
+    #[prost(message, optional, tag = "9")]
+    pub min_price_increment: ::core::option::Option<Quotation>,
+    /// Лотность инструмента.
+    #[prost(int32, tag = "10")]
+    pub lot: i32,
+    /// Номинал.
+    #[prost(message, optional, tag = "11")]
+    pub nominal: ::core::option::Option<MoneyValue>,
+    /// Валюта расчетов.
+    #[prost(string, tag = "12")]
+    pub currency: ::prost::alloc::string::String,
+    /// Дата погашения облигации в формате UTC.
+    #[prost(message, optional, tag = "13")]
+    pub maturity_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Дата размещения в формате UTC.
+    #[prost(message, optional, tag = "14")]
+    pub placement_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Форма выпуска.
+    #[prost(string, tag = "15")]
+    pub issue_kind: ::prost::alloc::string::String,
+    /// Размер выпуска.
+    #[prost(int32, tag = "16")]
+    pub issue_size: i32,
+    /// Плановый размер выпуска.
+    #[prost(int32, tag = "17")]
+    pub issue_size_plan: i32,
+    /// Ставка риска клиента по инструменту лонг.
+    #[prost(message, optional, tag = "18")]
+    pub dlong_client: ::core::option::Option<Quotation>,
+    /// Ставка риска клиента по инструменту шорт.
+    #[prost(message, optional, tag = "19")]
+    pub dshort_client: ::core::option::Option<Quotation>,
+    /// Признак доступности для операций в шорт.
+    #[prost(bool, tag = "20")]
+    pub short_enabled_flag: bool,
+    /// Торговая площадка (секция биржи).
+    #[prost(string, tag = "21")]
+    pub exchange: ::prost::alloc::string::String,
+    /// Текущий режим торгов инструмента.
+    #[prost(enumeration = "SecurityTradingStatus", tag = "22")]
+    pub trading_status: i32,
+    /// Признак доступности торгов по бумаге через API.
+    #[prost(bool, tag = "23")]
+    pub api_trade_available_flag: bool,
+    /// Признак доступности для покупки.
+    #[prost(bool, tag = "24")]
+    pub buy_available_flag: bool,
+    /// Признак доступности для продажи.
+    #[prost(bool, tag = "25")]
+    pub sell_available_flag: bool,
+    /// Признак доступности выставления лимитной заявки по инструменту.
+    #[prost(bool, tag = "26")]
+    pub limit_order_available_flag: bool,
+    /// Признак доступности выставления рыночной заявки по инструменту.
+    #[prost(bool, tag = "27")]
+    pub market_order_available_flag: bool,
+    /// Признак доступности выставления bestprice заявки по инструменту.
+    #[prost(bool, tag = "28")]
+    pub bestprice_order_available_flag: bool,
+    /// Флаг отображающий доступность торговли инструментом по выходным.
+    #[prost(bool, tag = "29")]
+    pub weekend_flag: bool,
+    /// Флаг достаточной ликвидности.
+    #[prost(bool, tag = "30")]
+    pub liquidity_flag: bool,
+    /// Возможность покупки/продажи на ИИС.
+    #[prost(bool, tag = "31")]
+    pub for_iis_flag: bool,
+    /// Флаг отображающий доступность торговли инструментом только для квалифицированных инвесторов.
+    #[prost(bool, tag = "32")]
+    pub for_qual_investor_flag: bool,
+    /// Признак ФИ, включенного в ломбардный список.
+    #[prost(bool, tag = "33")]
+    pub pawnshop_list_flag: bool,
+    /// Реальная площадка исполнения расчётов.
+    #[prost(enumeration = "RealExchange", tag = "34")]
+    pub real_exchange: i32,
+    /// Дата первой минутной свечи.
+    #[prost(message, optional, tag = "35")]
+    pub first_1min_candle_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Дата первой дневной свечи.
+    #[prost(message, optional, tag = "36")]
+    pub first_1day_candle_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Название заемщика.
+    #[prost(string, tag = "37")]
+    pub borrow_name: ::prost::alloc::string::String,
+    /// Тип структурной ноты.
+    #[prost(string, tag = "38")]
+    pub r#type: ::prost::alloc::string::String,
+    /// Стратегия портфеля.
+    #[prost(enumeration = "structured_note::LogicPortfolio", tag = "39")]
+    pub logic_portfolio: i32,
+    /// Тип базового актива.
+    #[prost(enumeration = "AssetType", tag = "40")]
+    pub asset_type: i32,
+    /// Базовые активы, входящие в ноту.
+    #[prost(message, repeated, tag = "41")]
+    pub basic_assets: ::prost::alloc::vec::Vec<structured_note::BasicAsset>,
+    /// Барьер сохранности (в процентах).
+    #[prost(message, optional, tag = "42")]
+    pub safety_barrier: ::core::option::Option<Quotation>,
+    /// Базис расчета НКД.
+    #[prost(string, tag = "43")]
+    pub coupon_period_base: ::prost::alloc::string::String,
+    /// Принцип наблюдений.
+    #[prost(enumeration = "structured_note::ObservationPrinciple", tag = "44")]
+    pub observation_principle: i32,
+    /// Частота наблюдений.
+    #[prost(string, tag = "45")]
+    pub observation_frequency: ::prost::alloc::string::String,
+    /// Дата фиксации цен базовых активов.
+    #[prost(message, optional, tag = "46")]
+    pub initial_price_fixing_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Доходность по ноте в годовом выражении.
+    #[prost(message, repeated, tag = "47")]
+    pub r#yield: ::prost::alloc::vec::Vec<structured_note::Yield>,
+    /// Признак сохранения купонов.
+    #[prost(bool, tag = "48")]
+    pub coupon_saving_flag: bool,
+    /// Сектор экономики.
+    #[prost(string, tag = "49")]
+    pub sector: ::prost::alloc::string::String,
+    /// Код страны рисков.
+    #[prost(string, tag = "50")]
+    pub country_of_risk: ::prost::alloc::string::String,
+    /// Наименование страны рисков.
+    #[prost(string, tag = "51")]
+    pub country_of_risk_name: ::prost::alloc::string::String,
+    /// Имя файла логотипа эмитента.
+    #[prost(string, tag = "52")]
+    pub logo_name: ::prost::alloc::string::String,
+    /// Тесты, которые необходимо пройти клиенту, чтобы совершать покупки по бумаге.
+    #[prost(string, repeated, tag = "53")]
+    pub required_tests: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `StructuredNote`.
+pub mod structured_note {
+    /// Базовый актив.
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct BasicAsset {
+        /// Уникальный идентификатор базового актива.
+        #[prost(string, tag = "1")]
+        pub uid: ::prost::alloc::string::String,
+        /// Тип базового актива.
+        #[prost(enumeration = "super::AssetType", tag = "2")]
+        pub r#type: i32,
+        /// Начальная цена базового актива.
+        #[prost(message, optional, tag = "3")]
+        pub initial_price: ::core::option::Option<super::Quotation>,
+    }
+    /// Доходность.
+    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct Yield {
+        /// Тип доходности.
+        #[prost(enumeration = "YieldType", tag = "1")]
+        pub r#type: i32,
+        /// Значение доходности.
+        #[prost(message, optional, tag = "2")]
+        pub value: ::core::option::Option<super::Quotation>,
+    }
+    /// Стратегия портфеля.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum LogicPortfolio {
+        /// Стратегия портфеля не определена.
+        Unspecified = 0,
+        /// Волатильность.
+        Volatility = 1,
+        /// Корреляция.
+        Correlation = 2,
+    }
+    impl LogicPortfolio {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unspecified => "LOGIC_PORTFOLIO_UNSPECIFIED",
+                Self::Volatility => "LOGIC_PORTFOLIO_VOLATILITY",
+                Self::Correlation => "LOGIC_PORTFOLIO_CORRELATION",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "LOGIC_PORTFOLIO_UNSPECIFIED" => Some(Self::Unspecified),
+                "LOGIC_PORTFOLIO_VOLATILITY" => Some(Self::Volatility),
+                "LOGIC_PORTFOLIO_CORRELATION" => Some(Self::Correlation),
+                _ => None,
+            }
+        }
+    }
+    /// Принцип наблюдений.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ObservationPrinciple {
+        /// Принцип наблюдений не определен.
+        Unspecified = 0,
+        /// По худшему базовому активу.
+        WorstBasicAsset = 1,
+        /// По лучшему базовому активу.
+        BestBasicAsset = 2,
+        /// Среднее значение по базовым активам.
+        AverageOfBasicAssets = 3,
+        /// Динамика актива (только если у ноты один базовый актив).
+        SingleBasicAssetPerformance = 4,
+    }
+    impl ObservationPrinciple {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unspecified => "OBSERVATION_PRINCIPLE_UNSPECIFIED",
+                Self::WorstBasicAsset => "OBSERVATION_PRINCIPLE_WORST_BASIC_ASSET",
+                Self::BestBasicAsset => "OBSERVATION_PRINCIPLE_BEST_BASIC_ASSET",
+                Self::AverageOfBasicAssets => {
+                    "OBSERVATION_PRINCIPLE_AVERAGE_OF_BASIC_ASSETS"
+                }
+                Self::SingleBasicAssetPerformance => {
+                    "OBSERVATION_PRINCIPLE_SINGLE_BASIC_ASSET_PERFORMANCE"
+                }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "OBSERVATION_PRINCIPLE_UNSPECIFIED" => Some(Self::Unspecified),
+                "OBSERVATION_PRINCIPLE_WORST_BASIC_ASSET" => Some(Self::WorstBasicAsset),
+                "OBSERVATION_PRINCIPLE_BEST_BASIC_ASSET" => Some(Self::BestBasicAsset),
+                "OBSERVATION_PRINCIPLE_AVERAGE_OF_BASIC_ASSETS" => {
+                    Some(Self::AverageOfBasicAssets)
+                }
+                "OBSERVATION_PRINCIPLE_SINGLE_BASIC_ASSET_PERFORMANCE" => {
+                    Some(Self::SingleBasicAssetPerformance)
+                }
+                _ => None,
+            }
+        }
+    }
+    /// Тип доходности.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum YieldType {
+        /// Тип доходности не определен.
+        Unspecified = 0,
+        /// Гарантированный купон.
+        GuarantedCoupon = 1,
+        /// Условный купон.
+        ConditionalCoupon = 2,
+        /// Участие в росте.
+        Participation = 3,
+    }
+    impl YieldType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::Unspecified => "YIELD_TYPE_UNSPECIFIED",
+                Self::GuarantedCoupon => "YIELD_TYPE_GUARANTED_COUPON",
+                Self::ConditionalCoupon => "YIELD_TYPE_CONDITIONAL_COUPON",
+                Self::Participation => "YIELD_TYPE_PARTICIPATION",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "YIELD_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "YIELD_TYPE_GUARANTED_COUPON" => Some(Self::GuarantedCoupon),
+                "YIELD_TYPE_CONDITIONAL_COUPON" => Some(Self::ConditionalCoupon),
+                "YIELD_TYPE_PARTICIPATION" => Some(Self::Participation),
+                _ => None,
+            }
+        }
+    }
 }
 /// Запрос НКД по облигации.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -3342,6 +3694,10 @@ pub mod get_insider_deals_response {
         Buy = 1,
         /// Продажа.
         Sell = 2,
+        /// Увеличение доли.
+        Increase = 3,
+        /// Уменьшение доли.
+        Decrease = 4,
     }
     impl TradeDirection {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -3353,6 +3709,8 @@ pub mod get_insider_deals_response {
                 Self::Unspecified => "TRADE_DIRECTION_UNSPECIFIED",
                 Self::Buy => "TRADE_DIRECTION_BUY",
                 Self::Sell => "TRADE_DIRECTION_SELL",
+                Self::Increase => "TRADE_DIRECTION_INCREASE",
+                Self::Decrease => "TRADE_DIRECTION_DECREASE",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -3361,6 +3719,8 @@ pub mod get_insider_deals_response {
                 "TRADE_DIRECTION_UNSPECIFIED" => Some(Self::Unspecified),
                 "TRADE_DIRECTION_BUY" => Some(Self::Buy),
                 "TRADE_DIRECTION_SELL" => Some(Self::Sell),
+                "TRADE_DIRECTION_INCREASE" => Some(Self::Increase),
+                "TRADE_DIRECTION_DECREASE" => Some(Self::Decrease),
                 _ => None,
             }
         }
@@ -5094,6 +5454,66 @@ pub mod instruments_service_client {
                     GrpcMethod::new(
                         "tinkoff.public.invest.api.contract.v1.InstrumentsService",
                         "GetInsiderDeals",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// StructuredNoteBy — получить структурную ноту по ее идентификатору
+        pub async fn structured_note_by(
+            &mut self,
+            request: impl tonic::IntoRequest<super::InstrumentRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::StructuredNoteResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.InstrumentsService/StructuredNoteBy",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                        "StructuredNoteBy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// StructuredNotes — список структурных нот
+        pub async fn structured_notes(
+            &mut self,
+            request: impl tonic::IntoRequest<super::InstrumentsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::StructuredNotesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.InstrumentsService/StructuredNotes",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                        "StructuredNotes",
                     ),
                 );
             self.inner.unary(req, path, codec).await
@@ -10705,1504 +11125,6 @@ pub mod orders_service_client {
         }
     }
 }
-/// Запрос получения счетов пользователя.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetAccountsRequest {
-    /// Статус счета.
-    #[prost(enumeration = "AccountStatus", optional, tag = "1")]
-    pub status: ::core::option::Option<i32>,
-}
-/// Список счетов пользователя.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetAccountsResponse {
-    /// Массив счетов клиента.
-    #[prost(message, repeated, tag = "1")]
-    pub accounts: ::prost::alloc::vec::Vec<Account>,
-}
-/// Информация о счeте.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Account {
-    /// Идентификатор счeта.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// Тип счeта.
-    #[prost(enumeration = "AccountType", tag = "2")]
-    pub r#type: i32,
-    /// Название счeта.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// Статус счeта.
-    #[prost(enumeration = "AccountStatus", tag = "4")]
-    pub status: i32,
-    /// Дата открытия счeта в часовом поясе UTC.
-    #[prost(message, optional, tag = "5")]
-    pub opened_date: ::core::option::Option<::prost_types::Timestamp>,
-    /// Дата закрытия счeта в часовом поясе UTC.
-    #[prost(message, optional, tag = "6")]
-    pub closed_date: ::core::option::Option<::prost_types::Timestamp>,
-    /// Уровень доступа к текущему счeту (определяется токеном).
-    #[prost(enumeration = "AccessLevel", tag = "7")]
-    pub access_level: i32,
-}
-/// Запрос маржинальных показателей по счeту.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMarginAttributesRequest {
-    /// Идентификатор счeта пользователя.
-    #[prost(string, tag = "1")]
-    pub account_id: ::prost::alloc::string::String,
-}
-/// Маржинальные показатели по счeту.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetMarginAttributesResponse {
-    /// Ликвидная стоимость портфеля. [Подробнее про ликвидный портфель](<https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q4>).
-    #[prost(message, optional, tag = "1")]
-    pub liquid_portfolio: ::core::option::Option<MoneyValue>,
-    /// Начальная маржа — начальное обеспечение для совершения новой сделки. [Подробнее про начальную и минимальную маржу](<https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q6>).
-    #[prost(message, optional, tag = "2")]
-    pub starting_margin: ::core::option::Option<MoneyValue>,
-    /// Минимальная маржа — это минимальное обеспечение для поддержания позиции, которую вы уже открыли. [Подробнее про начальную и минимальную маржу](<https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q6>).
-    #[prost(message, optional, tag = "3")]
-    pub minimal_margin: ::core::option::Option<MoneyValue>,
-    /// Уровень достаточности средств. Соотношение стоимости ликвидного портфеля к начальной марже.
-    #[prost(message, optional, tag = "4")]
-    pub funds_sufficiency_level: ::core::option::Option<Quotation>,
-    /// Объем недостающих средств. Разница между стартовой маржой и ликвидной стоимости портфеля.
-    #[prost(message, optional, tag = "5")]
-    pub amount_of_missing_funds: ::core::option::Option<MoneyValue>,
-    /// Скорректированная маржа. Начальная маржа, в которой плановые позиции рассчитываются с учeтом активных заявок на покупку позиций лонг или продажу позиций шорт.
-    #[prost(message, optional, tag = "6")]
-    pub corrected_margin: ::core::option::Option<MoneyValue>,
-}
-/// Запрос текущих лимитов пользователя.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetUserTariffRequest {}
-/// Текущие лимиты пользователя.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetUserTariffResponse {
-    /// Массив лимитов пользователя по unary-запросам.
-    #[prost(message, repeated, tag = "1")]
-    pub unary_limits: ::prost::alloc::vec::Vec<UnaryLimit>,
-    /// Массив лимитов пользователей для stream-соединений.
-    #[prost(message, repeated, tag = "2")]
-    pub stream_limits: ::prost::alloc::vec::Vec<StreamLimit>,
-}
-/// Лимит unary-методов.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct UnaryLimit {
-    /// Количество unary-запросов в минуту.
-    #[prost(int32, tag = "1")]
-    pub limit_per_minute: i32,
-    /// Названия методов.
-    #[prost(string, repeated, tag = "2")]
-    pub methods: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Лимит stream-соединений.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct StreamLimit {
-    /// Максимальное количество stream-соединений.
-    #[prost(int32, tag = "1")]
-    pub limit: i32,
-    /// Названия stream-методов.
-    #[prost(string, repeated, tag = "2")]
-    pub streams: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Текущее количество открытых stream-соединений.
-    #[prost(int32, tag = "3")]
-    pub open: i32,
-}
-/// Запрос информации о пользователе.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetInfoRequest {}
-/// Информация о пользователе.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetInfoResponse {
-    /// Признак премиум клиента.
-    #[prost(bool, tag = "1")]
-    pub prem_status: bool,
-    /// Признак квалифицированного инвестора.
-    #[prost(bool, tag = "2")]
-    pub qual_status: bool,
-    /// Набор требующих тестирования инструментов и возможностей, с которыми может работать пользователь. [Подробнее](/invest/services/accounts/faq_users).
-    #[prost(string, repeated, tag = "3")]
-    pub qualified_for_work_with: ::prost::alloc::vec::Vec<
-        ::prost::alloc::string::String,
-    >,
-    /// Наименование тарифа пользователя.
-    #[prost(string, tag = "4")]
-    pub tariff: ::prost::alloc::string::String,
-    /// Идентификатор пользователя.
-    #[prost(string, tag = "9")]
-    pub user_id: ::prost::alloc::string::String,
-    /// Категория риска.
-    #[prost(string, tag = "12")]
-    pub risk_level_code: ::prost::alloc::string::String,
-}
-/// Тип счeта.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum AccountType {
-    /// Тип аккаунта не определeн.
-    Unspecified = 0,
-    /// Брокерский счeт Т-Инвестиций.
-    Tinkoff = 1,
-    /// ИИС.
-    TinkoffIis = 2,
-    /// Инвесткопилка.
-    InvestBox = 3,
-    /// Фонд денежного рынка.
-    InvestFund = 4,
-}
-impl AccountType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "ACCOUNT_TYPE_UNSPECIFIED",
-            Self::Tinkoff => "ACCOUNT_TYPE_TINKOFF",
-            Self::TinkoffIis => "ACCOUNT_TYPE_TINKOFF_IIS",
-            Self::InvestBox => "ACCOUNT_TYPE_INVEST_BOX",
-            Self::InvestFund => "ACCOUNT_TYPE_INVEST_FUND",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "ACCOUNT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "ACCOUNT_TYPE_TINKOFF" => Some(Self::Tinkoff),
-            "ACCOUNT_TYPE_TINKOFF_IIS" => Some(Self::TinkoffIis),
-            "ACCOUNT_TYPE_INVEST_BOX" => Some(Self::InvestBox),
-            "ACCOUNT_TYPE_INVEST_FUND" => Some(Self::InvestFund),
-            _ => None,
-        }
-    }
-}
-/// Статус счeта.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum AccountStatus {
-    /// Статус счeта не определeн.
-    Unspecified = 0,
-    /// Новый, в процессе открытия.
-    New = 1,
-    /// Открытый и активный счeт.
-    Open = 2,
-    /// Закрытый счeт.
-    Closed = 3,
-    /// Все счета.
-    All = 4,
-}
-impl AccountStatus {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "ACCOUNT_STATUS_UNSPECIFIED",
-            Self::New => "ACCOUNT_STATUS_NEW",
-            Self::Open => "ACCOUNT_STATUS_OPEN",
-            Self::Closed => "ACCOUNT_STATUS_CLOSED",
-            Self::All => "ACCOUNT_STATUS_ALL",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "ACCOUNT_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
-            "ACCOUNT_STATUS_NEW" => Some(Self::New),
-            "ACCOUNT_STATUS_OPEN" => Some(Self::Open),
-            "ACCOUNT_STATUS_CLOSED" => Some(Self::Closed),
-            "ACCOUNT_STATUS_ALL" => Some(Self::All),
-            _ => None,
-        }
-    }
-}
-/// Уровень доступа к счeту.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum AccessLevel {
-    /// Уровень доступа не определeн.
-    AccountAccessLevelUnspecified = 0,
-    /// Полный доступ к счeту.
-    AccountAccessLevelFullAccess = 1,
-    /// Доступ с уровнем прав «только чтение».
-    AccountAccessLevelReadOnly = 2,
-    /// Доступа нет.
-    AccountAccessLevelNoAccess = 3,
-}
-impl AccessLevel {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::AccountAccessLevelUnspecified => "ACCOUNT_ACCESS_LEVEL_UNSPECIFIED",
-            Self::AccountAccessLevelFullAccess => "ACCOUNT_ACCESS_LEVEL_FULL_ACCESS",
-            Self::AccountAccessLevelReadOnly => "ACCOUNT_ACCESS_LEVEL_READ_ONLY",
-            Self::AccountAccessLevelNoAccess => "ACCOUNT_ACCESS_LEVEL_NO_ACCESS",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "ACCOUNT_ACCESS_LEVEL_UNSPECIFIED" => {
-                Some(Self::AccountAccessLevelUnspecified)
-            }
-            "ACCOUNT_ACCESS_LEVEL_FULL_ACCESS" => {
-                Some(Self::AccountAccessLevelFullAccess)
-            }
-            "ACCOUNT_ACCESS_LEVEL_READ_ONLY" => Some(Self::AccountAccessLevelReadOnly),
-            "ACCOUNT_ACCESS_LEVEL_NO_ACCESS" => Some(Self::AccountAccessLevelNoAccess),
-            _ => None,
-        }
-    }
-}
-/// Generated client implementations.
-pub mod users_service_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct UsersServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl UsersServiceClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> UsersServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> UsersServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            UsersServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        /// GetAccounts — счета пользователя
-        /// Получить список счетов.
-        pub async fn get_accounts(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetAccountsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetAccountsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.UsersService/GetAccounts",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.UsersService",
-                        "GetAccounts",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetMarginAttributes — маржинальные показатели по счeту
-        /// Метод позволяет получить маржинальные показатели и ликвидность по заданному счeту.
-        pub async fn get_margin_attributes(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetMarginAttributesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMarginAttributesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.UsersService/GetMarginAttributes",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.UsersService",
-                        "GetMarginAttributes",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetUserTariff — тариф пользователя
-        /// Получить информацию о текущих лимитах на подклчение, согласно текущему тарифу пользователя.
-        pub async fn get_user_tariff(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetUserTariffRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetUserTariffResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.UsersService/GetUserTariff",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.UsersService",
-                        "GetUserTariff",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetInfo — информация о пользователе
-        /// Получить информацию о пользователе: тариф, признак квалификации, пройденные тесты и др.
-        pub async fn get_info(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetInfoRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetInfoResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.UsersService/GetInfo",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.UsersService",
-                        "GetInfo",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// Запрос открытия счета в песочнице.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct OpenSandboxAccountRequest {
-    /// Название счета
-    #[prost(string, optional, tag = "1")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Номер открытого счета в песочнице.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct OpenSandboxAccountResponse {
-    /// Номер счета
-    #[prost(string, tag = "1")]
-    pub account_id: ::prost::alloc::string::String,
-}
-/// Запрос закрытия счета в песочнице.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CloseSandboxAccountRequest {
-    /// Номер счета
-    #[prost(string, tag = "1")]
-    pub account_id: ::prost::alloc::string::String,
-}
-/// Результат закрытия счета в песочнице.
-///
-/// пустой ответ
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CloseSandboxAccountResponse {}
-/// Запрос пополнения счета в песочнице.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SandboxPayInRequest {
-    /// Номер счета
-    #[prost(string, tag = "1")]
-    pub account_id: ::prost::alloc::string::String,
-    /// Сумма пополнения счета в рублях
-    #[prost(message, optional, tag = "2")]
-    pub amount: ::core::option::Option<MoneyValue>,
-}
-/// Результат пополнения счета, текущий баланс.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SandboxPayInResponse {
-    /// Текущий баланс счета
-    #[prost(message, optional, tag = "1")]
-    pub balance: ::core::option::Option<MoneyValue>,
-}
-/// Generated client implementations.
-pub mod sandbox_service_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct SandboxServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl SandboxServiceClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> SandboxServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SandboxServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            SandboxServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        /// OpenSandboxAccount — зарегистрировать счет
-        pub async fn open_sandbox_account(
-            &mut self,
-            request: impl tonic::IntoRequest<super::OpenSandboxAccountRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::OpenSandboxAccountResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/OpenSandboxAccount",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "OpenSandboxAccount",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetSandboxAccounts — счета пользователя
-        pub async fn get_sandbox_accounts(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetAccountsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetAccountsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxAccounts",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxAccounts",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// CloseSandboxAccount — закрыть счет
-        pub async fn close_sandbox_account(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CloseSandboxAccountRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CloseSandboxAccountResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/CloseSandboxAccount",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "CloseSandboxAccount",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// PostSandboxOrder — выставить заявку
-        pub async fn post_sandbox_order(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PostOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/PostSandboxOrder",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "PostSandboxOrder",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// PostSandboxOrderAsync — выставить заявку асинхронным методом
-        /// Особенности работы приведены в [статье](/invest/services/orders/async).
-        pub async fn post_sandbox_order_async(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PostOrderAsyncRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderAsyncResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/PostSandboxOrderAsync",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "PostSandboxOrderAsync",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// ReplaceSandboxOrder — изменить выставленную заявку
-        pub async fn replace_sandbox_order(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ReplaceOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/ReplaceSandboxOrder",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "ReplaceSandboxOrder",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetSandboxOrders — получить список активных заявок по счету
-        pub async fn get_sandbox_orders(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetOrdersRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOrdersResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOrders",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxOrders",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// CancelSandboxOrder — отменить заявку
-        pub async fn cancel_sandbox_order(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CancelOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CancelOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/CancelSandboxOrder",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "CancelSandboxOrder",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetSandboxOrderState — получить статус торгового поручения
-        pub async fn get_sandbox_order_state(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetOrderStateRequest>,
-        ) -> std::result::Result<tonic::Response<super::OrderState>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOrderState",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxOrderState",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetSandboxPositions — список позиций по счету
-        pub async fn get_sandbox_positions(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PositionsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PositionsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxPositions",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxPositions",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetSandboxOperations — список операций по счету
-        /// При работе с методом учитывайте [особенности взаимодействия](/invest/services/operations/operations_problems).
-        pub async fn get_sandbox_operations(
-            &mut self,
-            request: impl tonic::IntoRequest<super::OperationsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::OperationsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOperations",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxOperations",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetSandboxOperationsByCursor — список операций по счету с пагинацией
-        /// При работе с методом учитывайте [особенности взаимодействия](/invest/services/operations/operations_problems).
-        pub async fn get_sandbox_operations_by_cursor(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetOperationsByCursorRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOperationsByCursorResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOperationsByCursor",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxOperationsByCursor",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetSandboxPortfolio — портфель по счету
-        pub async fn get_sandbox_portfolio(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PortfolioRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PortfolioResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxPortfolio",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxPortfolio",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// SandboxPayIn — пополнить счет.
-        pub async fn sandbox_pay_in(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SandboxPayInRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::SandboxPayInResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/SandboxPayIn",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "SandboxPayIn",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetSandboxWithdrawLimits — доступный остаток для вывода средств
-        pub async fn get_sandbox_withdraw_limits(
-            &mut self,
-            request: impl tonic::IntoRequest<super::WithdrawLimitsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::WithdrawLimitsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxWithdrawLimits",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxWithdrawLimits",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetSandboxMaxLots — расчет количества доступных для покупки/продажи лотов
-        pub async fn get_sandbox_max_lots(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetMaxLotsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMaxLotsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxMaxLots",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxMaxLots",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// Запрос стратегий.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetStrategiesRequest {
-    /// Идентификатор стратегии.
-    #[prost(string, optional, tag = "1")]
-    pub strategy_id: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Стратегии
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetStrategiesResponse {
-    #[prost(message, repeated, tag = "1")]
-    pub strategies: ::prost::alloc::vec::Vec<Strategy>,
-}
-/// Стратегия
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Strategy {
-    /// Идентификатор стратегии.
-    #[prost(string, tag = "1")]
-    pub strategy_id: ::prost::alloc::string::String,
-    /// Название стратегии.
-    #[prost(string, tag = "2")]
-    pub strategy_name: ::prost::alloc::string::String,
-    /// Описание стратегии.
-    #[prost(string, optional, tag = "3")]
-    pub strategy_description: ::core::option::Option<::prost::alloc::string::String>,
-    /// Ссылка на страницу с описанием стратегии.
-    #[prost(string, optional, tag = "4")]
-    pub strategy_url: ::core::option::Option<::prost::alloc::string::String>,
-    /// Тип стратегии.
-    #[prost(enumeration = "StrategyType", tag = "5")]
-    pub strategy_type: i32,
-    /// Количество активных сигналов.
-    #[prost(int32, tag = "6")]
-    pub active_signals: i32,
-    /// Общее количество сигналов.
-    #[prost(int32, tag = "7")]
-    pub total_signals: i32,
-    /// Среднее время нахождения сигнала в позиции.
-    #[prost(int64, tag = "8")]
-    pub time_in_position: i64,
-    /// Средняя доходность сигнала в стратегии.
-    #[prost(message, optional, tag = "9")]
-    pub average_signal_yield: ::core::option::Option<Quotation>,
-    /// Средняя доходность сигналов в стратегии за последний год.
-    #[prost(message, optional, tag = "10")]
-    pub average_signal_yield_year: ::core::option::Option<Quotation>,
-    /// Доходность стратегии.
-    #[prost(message, optional, tag = "11")]
-    pub r#yield: ::core::option::Option<Quotation>,
-    /// Доходность стратегии за последний год.
-    #[prost(message, optional, tag = "12")]
-    pub yield_year: ::core::option::Option<Quotation>,
-}
-/// Запрос сигналов.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetSignalsRequest {
-    /// Идентификатор сигнала.
-    #[prost(string, optional, tag = "1")]
-    pub signal_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Идентификатор стратегии.
-    #[prost(string, optional, tag = "2")]
-    pub strategy_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Тип стратегии.
-    #[prost(enumeration = "StrategyType", optional, tag = "3")]
-    pub strategy_type: ::core::option::Option<i32>,
-    ///
-    /// ```text
-    /// Идентификатор бумаги.
-    /// ```
-    #[prost(string, optional, tag = "4")]
-    pub instrument_uid: ::core::option::Option<::prost::alloc::string::String>,
-    ///
-    /// ```text
-    /// Дата начала запрашиваемого интервала по UTC.
-    /// ```
-    #[prost(message, optional, tag = "5")]
-    pub from: ::core::option::Option<::prost_types::Timestamp>,
-    ///
-    /// ```text
-    /// Дата конца запрашиваемого интервала по UTC.
-    /// ```
-    #[prost(message, optional, tag = "6")]
-    pub to: ::core::option::Option<::prost_types::Timestamp>,
-    ///
-    /// ```text
-    /// Направление сигнала.
-    /// ```
-    #[prost(enumeration = "SignalDirection", optional, tag = "7")]
-    pub direction: ::core::option::Option<i32>,
-    /// Состояние сигнала.
-    #[prost(enumeration = "SignalState", optional, tag = "8")]
-    pub active: ::core::option::Option<i32>,
-    /// Настройки пагинации.
-    #[prost(message, optional, tag = "9")]
-    pub paging: ::core::option::Option<Page>,
-}
-/// Сигналы.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetSignalsResponse {
-    /// Массив сигналов.
-    #[prost(message, repeated, tag = "1")]
-    pub signals: ::prost::alloc::vec::Vec<Signal>,
-    /// Данные по пагинации.
-    #[prost(message, optional, tag = "2")]
-    pub paging: ::core::option::Option<PageResponse>,
-}
-/// Сигнал.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct Signal {
-    /// Идентификатор сигнала.
-    #[prost(string, tag = "1")]
-    pub signal_id: ::prost::alloc::string::String,
-    /// Идентификатор стратегии.
-    #[prost(string, tag = "2")]
-    pub strategy_id: ::prost::alloc::string::String,
-    /// Название стратегии.
-    #[prost(string, tag = "3")]
-    pub strategy_name: ::prost::alloc::string::String,
-    /// Идентификатор бумаги.
-    #[prost(string, tag = "4")]
-    pub instrument_uid: ::prost::alloc::string::String,
-    /// Дата и время создания сигнала по UTC.
-    #[prost(message, optional, tag = "5")]
-    pub create_dt: ::core::option::Option<::prost_types::Timestamp>,
-    /// Направление сигнала.
-    #[prost(enumeration = "SignalDirection", tag = "6")]
-    pub direction: i32,
-    /// Цена бумаги на момент формирования сигнала.
-    #[prost(message, optional, tag = "7")]
-    pub initial_price: ::core::option::Option<Quotation>,
-    /// Дополнительная информация о сигнале.
-    #[prost(string, optional, tag = "8")]
-    pub info: ::core::option::Option<::prost::alloc::string::String>,
-    /// Название сигнала.
-    #[prost(string, tag = "9")]
-    pub name: ::prost::alloc::string::String,
-    /// Целевая цена.
-    #[prost(message, optional, tag = "10")]
-    pub target_price: ::core::option::Option<Quotation>,
-    /// Дата и время дедлайна сигнала по UTC.
-    #[prost(message, optional, tag = "11")]
-    pub end_dt: ::core::option::Option<::prost_types::Timestamp>,
-    /// Вероятность сигнала.
-    #[prost(int32, optional, tag = "12")]
-    pub probability: ::core::option::Option<i32>,
-    /// Порог закрытия сигнала по стоплосс.
-    #[prost(message, optional, tag = "13")]
-    pub stoploss: ::core::option::Option<Quotation>,
-    /// Цена закрытия сигнала.
-    #[prost(message, optional, tag = "14")]
-    pub close_price: ::core::option::Option<Quotation>,
-    /// Дата и время закрытия сигнала по UTC.
-    #[prost(message, optional, tag = "15")]
-    pub close_dt: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Тип стратегии.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum StrategyType {
-    /// Не определен.
-    Unspecified = 0,
-    /// Техническая стратегия.
-    Technical = 1,
-    /// Фундаментальная стратегия.
-    Fundamental = 2,
-}
-impl StrategyType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "STRATEGY_TYPE_UNSPECIFIED",
-            Self::Technical => "STRATEGY_TYPE_TECHNICAL",
-            Self::Fundamental => "STRATEGY_TYPE_FUNDAMENTAL",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "STRATEGY_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "STRATEGY_TYPE_TECHNICAL" => Some(Self::Technical),
-            "STRATEGY_TYPE_FUNDAMENTAL" => Some(Self::Fundamental),
-            _ => None,
-        }
-    }
-}
-/// Направление сигнала.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum SignalDirection {
-    /// Не определен.
-    Unspecified = 0,
-    /// Покупка.
-    Buy = 1,
-    /// Продажа.
-    Sell = 2,
-}
-impl SignalDirection {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "SIGNAL_DIRECTION_UNSPECIFIED",
-            Self::Buy => "SIGNAL_DIRECTION_BUY",
-            Self::Sell => "SIGNAL_DIRECTION_SELL",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "SIGNAL_DIRECTION_UNSPECIFIED" => Some(Self::Unspecified),
-            "SIGNAL_DIRECTION_BUY" => Some(Self::Buy),
-            "SIGNAL_DIRECTION_SELL" => Some(Self::Sell),
-            _ => None,
-        }
-    }
-}
-/// Статус сигнала.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum SignalState {
-    /// Не определен.
-    Unspecified = 0,
-    /// Активный сигнал.
-    Active = 1,
-    /// Закрытый сигнал.
-    Closed = 2,
-    /// Все состояния.
-    All = 3,
-}
-impl SignalState {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "SIGNAL_STATE_UNSPECIFIED",
-            Self::Active => "SIGNAL_STATE_ACTIVE",
-            Self::Closed => "SIGNAL_STATE_CLOSED",
-            Self::All => "SIGNAL_STATE_ALL",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "SIGNAL_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-            "SIGNAL_STATE_ACTIVE" => Some(Self::Active),
-            "SIGNAL_STATE_CLOSED" => Some(Self::Closed),
-            "SIGNAL_STATE_ALL" => Some(Self::All),
-            _ => None,
-        }
-    }
-}
-/// Generated client implementations.
-pub mod signal_service_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct SignalServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl SignalServiceClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> SignalServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SignalServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            SignalServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        /// GetStrategies — стратегии
-        pub async fn get_strategies(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetStrategiesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetStrategiesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SignalService/GetStrategies",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SignalService",
-                        "GetStrategies",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetSignals — сигналы
-        pub async fn get_signals(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetSignalsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetSignalsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.SignalService/GetSignals",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SignalService",
-                        "GetSignals",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
 /// Запрос выставления стоп-заявки.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PostStopOrderRequest {
@@ -12866,6 +11788,1713 @@ pub mod stop_orders_service_client {
                     GrpcMethod::new(
                         "tinkoff.public.invest.api.contract.v1.StopOrdersService",
                         "CancelStopOrder",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Запрос получения счетов пользователя.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetAccountsRequest {
+    /// Статус счета.
+    #[prost(enumeration = "AccountStatus", optional, tag = "1")]
+    pub status: ::core::option::Option<i32>,
+}
+/// Список счетов пользователя.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetAccountsResponse {
+    /// Массив счетов клиента.
+    #[prost(message, repeated, tag = "1")]
+    pub accounts: ::prost::alloc::vec::Vec<Account>,
+}
+/// Информация о счeте.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Account {
+    /// Идентификатор счeта.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// Тип счeта.
+    #[prost(enumeration = "AccountType", tag = "2")]
+    pub r#type: i32,
+    /// Название счeта.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// Статус счeта.
+    #[prost(enumeration = "AccountStatus", tag = "4")]
+    pub status: i32,
+    /// Дата открытия счeта в часовом поясе UTC.
+    #[prost(message, optional, tag = "5")]
+    pub opened_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Дата закрытия счeта в часовом поясе UTC.
+    #[prost(message, optional, tag = "6")]
+    pub closed_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Уровень доступа к текущему счeту (определяется токеном).
+    #[prost(enumeration = "AccessLevel", tag = "7")]
+    pub access_level: i32,
+}
+/// Запрос маржинальных показателей по счeту.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetMarginAttributesRequest {
+    /// Идентификатор счeта пользователя.
+    #[prost(string, tag = "1")]
+    pub account_id: ::prost::alloc::string::String,
+}
+/// Маржинальные показатели по счeту.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetMarginAttributesResponse {
+    /// Ликвидная стоимость портфеля. [Подробнее про ликвидный портфель](<https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q4>).
+    #[prost(message, optional, tag = "1")]
+    pub liquid_portfolio: ::core::option::Option<MoneyValue>,
+    /// Начальная маржа — начальное обеспечение для совершения новой сделки. [Подробнее про начальную и минимальную маржу](<https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q6>).
+    #[prost(message, optional, tag = "2")]
+    pub starting_margin: ::core::option::Option<MoneyValue>,
+    /// Минимальная маржа — это минимальное обеспечение для поддержания позиции, которую вы уже открыли. [Подробнее про начальную и минимальную маржу](<https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q6>).
+    #[prost(message, optional, tag = "3")]
+    pub minimal_margin: ::core::option::Option<MoneyValue>,
+    /// Уровень достаточности средств. Соотношение стоимости ликвидного портфеля к начальной марже.
+    #[prost(message, optional, tag = "4")]
+    pub funds_sufficiency_level: ::core::option::Option<Quotation>,
+    /// Объем недостающих средств. Разница между стартовой маржой и ликвидной стоимости портфеля.
+    #[prost(message, optional, tag = "5")]
+    pub amount_of_missing_funds: ::core::option::Option<MoneyValue>,
+    /// Скорректированная маржа. Начальная маржа, в которой плановые позиции рассчитываются с учeтом активных заявок на покупку позиций лонг или продажу позиций шорт.
+    #[prost(message, optional, tag = "6")]
+    pub corrected_margin: ::core::option::Option<MoneyValue>,
+}
+/// Запрос текущих лимитов пользователя.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetUserTariffRequest {}
+/// Текущие лимиты пользователя.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetUserTariffResponse {
+    /// Массив лимитов пользователя по unary-запросам.
+    #[prost(message, repeated, tag = "1")]
+    pub unary_limits: ::prost::alloc::vec::Vec<UnaryLimit>,
+    /// Массив лимитов пользователей для stream-соединений.
+    #[prost(message, repeated, tag = "2")]
+    pub stream_limits: ::prost::alloc::vec::Vec<StreamLimit>,
+}
+/// Лимит unary-методов.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UnaryLimit {
+    /// Количество unary-запросов в минуту.
+    #[prost(int32, tag = "1")]
+    pub limit_per_minute: i32,
+    /// Названия методов.
+    #[prost(string, repeated, tag = "2")]
+    pub methods: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Количество unary-запросов в секунду.
+    #[prost(int32, optional, tag = "3")]
+    pub limit_per_second: ::core::option::Option<i32>,
+}
+/// Лимит stream-соединений.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct StreamLimit {
+    /// Максимальное количество stream-соединений.
+    #[prost(int32, tag = "1")]
+    pub limit: i32,
+    /// Названия stream-методов.
+    #[prost(string, repeated, tag = "2")]
+    pub streams: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Текущее количество открытых stream-соединений.
+    #[prost(int32, tag = "3")]
+    pub open: i32,
+}
+/// Запрос информации о пользователе.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetInfoRequest {}
+/// Информация о пользователе.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetInfoResponse {
+    /// Признак премиум клиента.
+    #[prost(bool, tag = "1")]
+    pub prem_status: bool,
+    /// Признак квалифицированного инвестора.
+    #[prost(bool, tag = "2")]
+    pub qual_status: bool,
+    /// Набор требующих тестирования инструментов и возможностей, с которыми может работать пользователь. [Подробнее](/invest/services/accounts/faq_users).
+    #[prost(string, repeated, tag = "3")]
+    pub qualified_for_work_with: ::prost::alloc::vec::Vec<
+        ::prost::alloc::string::String,
+    >,
+    /// Наименование тарифа пользователя.
+    #[prost(string, tag = "4")]
+    pub tariff: ::prost::alloc::string::String,
+    /// Идентификатор пользователя.
+    #[prost(string, tag = "9")]
+    pub user_id: ::prost::alloc::string::String,
+    /// Категория риска.
+    #[prost(string, tag = "12")]
+    pub risk_level_code: ::prost::alloc::string::String,
+}
+/// Запрос списка банковских счетов пользователя.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetBankAccountsRequest {}
+/// Список банковских счетов пользователя.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetBankAccountsResponse {
+    /// Массив банковских счетов.
+    #[prost(message, repeated, tag = "1")]
+    pub bank_accounts: ::prost::alloc::vec::Vec<BankAccount>,
+}
+/// Банковский счeт.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BankAccount {
+    /// Идентификатор счeта.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// Название счeта.
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// Список валютных позиций на счeте.
+    #[prost(message, repeated, tag = "3")]
+    pub money: ::prost::alloc::vec::Vec<MoneyValue>,
+    /// Дата открытия счeта в часовом поясе UTC.
+    #[prost(message, optional, tag = "4")]
+    pub opened_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Тип счeта.
+    #[prost(enumeration = "AccountType", tag = "5")]
+    pub r#type: i32,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CurrencyTransferRequest {
+    /// Номер счета списания.
+    #[prost(string, tag = "1")]
+    pub from_account_id: ::prost::alloc::string::String,
+    /// Номер счета зачисления.
+    #[prost(string, tag = "2")]
+    pub to_account_id: ::prost::alloc::string::String,
+    /// Сумма перевода с указанием валюты.
+    #[prost(message, optional, tag = "3")]
+    pub amount: ::core::option::Option<MoneyValue>,
+    /// Идентификатор запроса выставления поручения для целей идемпотентности в формате UUID.
+    #[prost(string, tag = "4")]
+    pub transaction_id: ::prost::alloc::string::String,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CurrencyTransferResponse {}
+/// Тип счeта.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AccountType {
+    /// Тип аккаунта не определeн.
+    Unspecified = 0,
+    /// Брокерский счeт Т-Инвестиций.
+    Tinkoff = 1,
+    /// ИИС.
+    TinkoffIis = 2,
+    /// Инвесткопилка.
+    InvestBox = 3,
+    /// Фонд денежного рынка.
+    InvestFund = 4,
+    /// Дебетовый карточный счeт.
+    Debit = 5,
+    /// Накопительный счeт.
+    Saving = 6,
+}
+impl AccountType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "ACCOUNT_TYPE_UNSPECIFIED",
+            Self::Tinkoff => "ACCOUNT_TYPE_TINKOFF",
+            Self::TinkoffIis => "ACCOUNT_TYPE_TINKOFF_IIS",
+            Self::InvestBox => "ACCOUNT_TYPE_INVEST_BOX",
+            Self::InvestFund => "ACCOUNT_TYPE_INVEST_FUND",
+            Self::Debit => "ACCOUNT_TYPE_DEBIT",
+            Self::Saving => "ACCOUNT_TYPE_SAVING",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ACCOUNT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "ACCOUNT_TYPE_TINKOFF" => Some(Self::Tinkoff),
+            "ACCOUNT_TYPE_TINKOFF_IIS" => Some(Self::TinkoffIis),
+            "ACCOUNT_TYPE_INVEST_BOX" => Some(Self::InvestBox),
+            "ACCOUNT_TYPE_INVEST_FUND" => Some(Self::InvestFund),
+            "ACCOUNT_TYPE_DEBIT" => Some(Self::Debit),
+            "ACCOUNT_TYPE_SAVING" => Some(Self::Saving),
+            _ => None,
+        }
+    }
+}
+/// Статус счeта.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AccountStatus {
+    /// Статус счeта не определeн.
+    Unspecified = 0,
+    /// Новый, в процессе открытия.
+    New = 1,
+    /// Открытый и активный счeт.
+    Open = 2,
+    /// Закрытый счeт.
+    Closed = 3,
+    /// Все счета.
+    All = 4,
+}
+impl AccountStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "ACCOUNT_STATUS_UNSPECIFIED",
+            Self::New => "ACCOUNT_STATUS_NEW",
+            Self::Open => "ACCOUNT_STATUS_OPEN",
+            Self::Closed => "ACCOUNT_STATUS_CLOSED",
+            Self::All => "ACCOUNT_STATUS_ALL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ACCOUNT_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "ACCOUNT_STATUS_NEW" => Some(Self::New),
+            "ACCOUNT_STATUS_OPEN" => Some(Self::Open),
+            "ACCOUNT_STATUS_CLOSED" => Some(Self::Closed),
+            "ACCOUNT_STATUS_ALL" => Some(Self::All),
+            _ => None,
+        }
+    }
+}
+/// Уровень доступа к счeту.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AccessLevel {
+    /// Уровень доступа не определeн.
+    AccountAccessLevelUnspecified = 0,
+    /// Полный доступ к счeту.
+    AccountAccessLevelFullAccess = 1,
+    /// Доступ с уровнем прав «только чтение».
+    AccountAccessLevelReadOnly = 2,
+    /// Доступа нет.
+    AccountAccessLevelNoAccess = 3,
+}
+impl AccessLevel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::AccountAccessLevelUnspecified => "ACCOUNT_ACCESS_LEVEL_UNSPECIFIED",
+            Self::AccountAccessLevelFullAccess => "ACCOUNT_ACCESS_LEVEL_FULL_ACCESS",
+            Self::AccountAccessLevelReadOnly => "ACCOUNT_ACCESS_LEVEL_READ_ONLY",
+            Self::AccountAccessLevelNoAccess => "ACCOUNT_ACCESS_LEVEL_NO_ACCESS",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ACCOUNT_ACCESS_LEVEL_UNSPECIFIED" => {
+                Some(Self::AccountAccessLevelUnspecified)
+            }
+            "ACCOUNT_ACCESS_LEVEL_FULL_ACCESS" => {
+                Some(Self::AccountAccessLevelFullAccess)
+            }
+            "ACCOUNT_ACCESS_LEVEL_READ_ONLY" => Some(Self::AccountAccessLevelReadOnly),
+            "ACCOUNT_ACCESS_LEVEL_NO_ACCESS" => Some(Self::AccountAccessLevelNoAccess),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod users_service_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct UsersServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl UsersServiceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> UsersServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> UsersServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            UsersServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// GetAccounts — счета пользователя
+        /// Получить список счетов.
+        pub async fn get_accounts(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAccountsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetAccountsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.UsersService/GetAccounts",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.UsersService",
+                        "GetAccounts",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetMarginAttributes — маржинальные показатели по счeту
+        /// Метод позволяет получить маржинальные показатели и ликвидность по заданному счeту.
+        pub async fn get_margin_attributes(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetMarginAttributesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetMarginAttributesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.UsersService/GetMarginAttributes",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.UsersService",
+                        "GetMarginAttributes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetUserTariff — тариф пользователя
+        /// Получить информацию о текущих лимитах на подклчение, согласно текущему тарифу пользователя.
+        pub async fn get_user_tariff(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetUserTariffRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetUserTariffResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.UsersService/GetUserTariff",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.UsersService",
+                        "GetUserTariff",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetInfo — информация о пользователе
+        /// Получить информацию о пользователе: тариф, признак квалификации, пройденные тесты и др.
+        pub async fn get_info(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetInfoRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetInfoResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.UsersService/GetInfo",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.UsersService",
+                        "GetInfo",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetBankAccounts — банковские счета пользователя
+        /// Получить список счетов пользователя, в том числе и банковских.
+        pub async fn get_bank_accounts(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetBankAccountsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetBankAccountsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.UsersService/GetBankAccounts",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.UsersService",
+                        "GetBankAccounts",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// CurrencyTransfer — перевод денежных средств между счетами
+        /// Перевести денежные средства между брокерскими счетами
+        pub async fn currency_transfer(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CurrencyTransferRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::CurrencyTransferResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.UsersService/CurrencyTransfer",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.UsersService",
+                        "CurrencyTransfer",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Запрос открытия счета в песочнице.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OpenSandboxAccountRequest {
+    /// Название счета
+    #[prost(string, optional, tag = "1")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Номер открытого счета в песочнице.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OpenSandboxAccountResponse {
+    /// Номер счета
+    #[prost(string, tag = "1")]
+    pub account_id: ::prost::alloc::string::String,
+}
+/// Запрос закрытия счета в песочнице.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CloseSandboxAccountRequest {
+    /// Номер счета
+    #[prost(string, tag = "1")]
+    pub account_id: ::prost::alloc::string::String,
+}
+/// Результат закрытия счета в песочнице.
+///
+/// пустой ответ
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CloseSandboxAccountResponse {}
+/// Запрос пополнения счета в песочнице.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SandboxPayInRequest {
+    /// Номер счета
+    #[prost(string, tag = "1")]
+    pub account_id: ::prost::alloc::string::String,
+    /// Сумма пополнения счета в рублях
+    #[prost(message, optional, tag = "2")]
+    pub amount: ::core::option::Option<MoneyValue>,
+}
+/// Результат пополнения счета, текущий баланс.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SandboxPayInResponse {
+    /// Текущий баланс счета
+    #[prost(message, optional, tag = "1")]
+    pub balance: ::core::option::Option<MoneyValue>,
+}
+/// Generated client implementations.
+pub mod sandbox_service_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct SandboxServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl SandboxServiceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> SandboxServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SandboxServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            SandboxServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// OpenSandboxAccount — зарегистрировать счет
+        pub async fn open_sandbox_account(
+            &mut self,
+            request: impl tonic::IntoRequest<super::OpenSandboxAccountRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::OpenSandboxAccountResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/OpenSandboxAccount",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "OpenSandboxAccount",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxAccounts — счета пользователя
+        pub async fn get_sandbox_accounts(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAccountsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetAccountsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxAccounts",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxAccounts",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// CloseSandboxAccount — закрыть счет
+        pub async fn close_sandbox_account(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CloseSandboxAccountRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::CloseSandboxAccountResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/CloseSandboxAccount",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "CloseSandboxAccount",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// PostSandboxOrder — выставить заявку
+        pub async fn post_sandbox_order(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PostOrderRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::PostOrderResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/PostSandboxOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "PostSandboxOrder",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// PostSandboxOrderAsync — выставить заявку асинхронным методом
+        /// Особенности работы приведены в [статье](/invest/services/orders/async).
+        pub async fn post_sandbox_order_async(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PostOrderAsyncRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::PostOrderAsyncResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/PostSandboxOrderAsync",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "PostSandboxOrderAsync",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// ReplaceSandboxOrder — изменить выставленную заявку
+        pub async fn replace_sandbox_order(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ReplaceOrderRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::PostOrderResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/ReplaceSandboxOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "ReplaceSandboxOrder",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxOrders — получить список активных заявок по счету
+        pub async fn get_sandbox_orders(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetOrdersRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetOrdersResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOrders",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxOrders",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// CancelSandboxOrder — отменить заявку
+        pub async fn cancel_sandbox_order(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CancelOrderRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::CancelOrderResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/CancelSandboxOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "CancelSandboxOrder",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxOrderState — получить статус торгового поручения
+        pub async fn get_sandbox_order_state(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetOrderStateRequest>,
+        ) -> std::result::Result<tonic::Response<super::OrderState>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOrderState",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxOrderState",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxPositions — список позиций по счету
+        pub async fn get_sandbox_positions(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PositionsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::PositionsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxPositions",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxPositions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxOperations — список операций по счету
+        /// При работе с методом учитывайте [особенности взаимодействия](/invest/services/operations/operations_problems).
+        pub async fn get_sandbox_operations(
+            &mut self,
+            request: impl tonic::IntoRequest<super::OperationsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::OperationsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOperations",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxOperations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxOperationsByCursor — список операций по счету с пагинацией
+        /// При работе с методом учитывайте [особенности взаимодействия](/invest/services/operations/operations_problems).
+        pub async fn get_sandbox_operations_by_cursor(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetOperationsByCursorRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetOperationsByCursorResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOperationsByCursor",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxOperationsByCursor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxPortfolio — портфель по счету
+        pub async fn get_sandbox_portfolio(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PortfolioRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::PortfolioResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxPortfolio",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxPortfolio",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// SandboxPayIn — пополнить счет.
+        pub async fn sandbox_pay_in(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SandboxPayInRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::SandboxPayInResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/SandboxPayIn",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "SandboxPayIn",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxWithdrawLimits — доступный остаток для вывода средств
+        pub async fn get_sandbox_withdraw_limits(
+            &mut self,
+            request: impl tonic::IntoRequest<super::WithdrawLimitsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::WithdrawLimitsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxWithdrawLimits",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxWithdrawLimits",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxMaxLots — расчет количества доступных для покупки/продажи лотов
+        pub async fn get_sandbox_max_lots(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetMaxLotsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetMaxLotsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxMaxLots",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxMaxLots",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// PostSandboxStopOrder — выставить стоп-заявку
+        pub async fn post_sandbox_stop_order(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PostStopOrderRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::PostStopOrderResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/PostSandboxStopOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "PostSandboxStopOrder",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxStopOrders — получить список активных стоп-заявок по счету
+        pub async fn get_sandbox_stop_orders(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetStopOrdersRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetStopOrdersResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxStopOrders",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxStopOrders",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// CancelSandboxStopOrder — отменить стоп-заявку
+        pub async fn cancel_sandbox_stop_order(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CancelStopOrderRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::CancelStopOrderResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/CancelSandboxStopOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "CancelSandboxStopOrder",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Запрос стратегий.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetStrategiesRequest {
+    /// Идентификатор стратегии.
+    #[prost(string, optional, tag = "1")]
+    pub strategy_id: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Стратегии
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetStrategiesResponse {
+    #[prost(message, repeated, tag = "1")]
+    pub strategies: ::prost::alloc::vec::Vec<Strategy>,
+}
+/// Стратегия
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Strategy {
+    /// Идентификатор стратегии.
+    #[prost(string, tag = "1")]
+    pub strategy_id: ::prost::alloc::string::String,
+    /// Название стратегии.
+    #[prost(string, tag = "2")]
+    pub strategy_name: ::prost::alloc::string::String,
+    /// Описание стратегии.
+    #[prost(string, optional, tag = "3")]
+    pub strategy_description: ::core::option::Option<::prost::alloc::string::String>,
+    /// Ссылка на страницу с описанием стратегии.
+    #[prost(string, optional, tag = "4")]
+    pub strategy_url: ::core::option::Option<::prost::alloc::string::String>,
+    /// Тип стратегии.
+    #[prost(enumeration = "StrategyType", tag = "5")]
+    pub strategy_type: i32,
+    /// Количество активных сигналов.
+    #[prost(int32, tag = "6")]
+    pub active_signals: i32,
+    /// Общее количество сигналов.
+    #[prost(int32, tag = "7")]
+    pub total_signals: i32,
+    /// Среднее время нахождения сигнала в позиции.
+    #[prost(int64, tag = "8")]
+    pub time_in_position: i64,
+    /// Средняя доходность сигнала в стратегии.
+    #[prost(message, optional, tag = "9")]
+    pub average_signal_yield: ::core::option::Option<Quotation>,
+    /// Средняя доходность сигналов в стратегии за последний год.
+    #[prost(message, optional, tag = "10")]
+    pub average_signal_yield_year: ::core::option::Option<Quotation>,
+    /// Доходность стратегии.
+    #[prost(message, optional, tag = "11")]
+    pub r#yield: ::core::option::Option<Quotation>,
+    /// Доходность стратегии за последний год.
+    #[prost(message, optional, tag = "12")]
+    pub yield_year: ::core::option::Option<Quotation>,
+}
+/// Запрос сигналов.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetSignalsRequest {
+    /// Идентификатор сигнала.
+    #[prost(string, optional, tag = "1")]
+    pub signal_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Идентификатор стратегии.
+    #[prost(string, optional, tag = "2")]
+    pub strategy_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Тип стратегии.
+    #[prost(enumeration = "StrategyType", optional, tag = "3")]
+    pub strategy_type: ::core::option::Option<i32>,
+    ///
+    /// ```text
+    /// Идентификатор бумаги.
+    /// ```
+    #[prost(string, optional, tag = "4")]
+    pub instrument_uid: ::core::option::Option<::prost::alloc::string::String>,
+    ///
+    /// ```text
+    /// Дата начала запрашиваемого интервала по UTC.
+    /// ```
+    #[prost(message, optional, tag = "5")]
+    pub from: ::core::option::Option<::prost_types::Timestamp>,
+    ///
+    /// ```text
+    /// Дата конца запрашиваемого интервала по UTC.
+    /// ```
+    #[prost(message, optional, tag = "6")]
+    pub to: ::core::option::Option<::prost_types::Timestamp>,
+    ///
+    /// ```text
+    /// Направление сигнала.
+    /// ```
+    #[prost(enumeration = "SignalDirection", optional, tag = "7")]
+    pub direction: ::core::option::Option<i32>,
+    /// Состояние сигнала.
+    #[prost(enumeration = "SignalState", optional, tag = "8")]
+    pub active: ::core::option::Option<i32>,
+    /// Настройки пагинации.
+    #[prost(message, optional, tag = "9")]
+    pub paging: ::core::option::Option<Page>,
+}
+/// Сигналы.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetSignalsResponse {
+    /// Массив сигналов.
+    #[prost(message, repeated, tag = "1")]
+    pub signals: ::prost::alloc::vec::Vec<Signal>,
+    /// Данные по пагинации.
+    #[prost(message, optional, tag = "2")]
+    pub paging: ::core::option::Option<PageResponse>,
+}
+/// Сигнал.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Signal {
+    /// Идентификатор сигнала.
+    #[prost(string, tag = "1")]
+    pub signal_id: ::prost::alloc::string::String,
+    /// Идентификатор стратегии.
+    #[prost(string, tag = "2")]
+    pub strategy_id: ::prost::alloc::string::String,
+    /// Название стратегии.
+    #[prost(string, tag = "3")]
+    pub strategy_name: ::prost::alloc::string::String,
+    /// Идентификатор бумаги.
+    #[prost(string, tag = "4")]
+    pub instrument_uid: ::prost::alloc::string::String,
+    /// Дата и время создания сигнала по UTC.
+    #[prost(message, optional, tag = "5")]
+    pub create_dt: ::core::option::Option<::prost_types::Timestamp>,
+    /// Направление сигнала.
+    #[prost(enumeration = "SignalDirection", tag = "6")]
+    pub direction: i32,
+    /// Цена бумаги на момент формирования сигнала.
+    #[prost(message, optional, tag = "7")]
+    pub initial_price: ::core::option::Option<Quotation>,
+    /// Дополнительная информация о сигнале.
+    #[prost(string, optional, tag = "8")]
+    pub info: ::core::option::Option<::prost::alloc::string::String>,
+    /// Название сигнала.
+    #[prost(string, tag = "9")]
+    pub name: ::prost::alloc::string::String,
+    /// Целевая цена.
+    #[prost(message, optional, tag = "10")]
+    pub target_price: ::core::option::Option<Quotation>,
+    /// Дата и время дедлайна сигнала по UTC.
+    #[prost(message, optional, tag = "11")]
+    pub end_dt: ::core::option::Option<::prost_types::Timestamp>,
+    /// Вероятность сигнала.
+    #[prost(int32, optional, tag = "12")]
+    pub probability: ::core::option::Option<i32>,
+    /// Порог закрытия сигнала по стоплосс.
+    #[prost(message, optional, tag = "13")]
+    pub stoploss: ::core::option::Option<Quotation>,
+    /// Цена закрытия сигнала.
+    #[prost(message, optional, tag = "14")]
+    pub close_price: ::core::option::Option<Quotation>,
+    /// Дата и время закрытия сигнала по UTC.
+    #[prost(message, optional, tag = "15")]
+    pub close_dt: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Тип стратегии.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum StrategyType {
+    /// Не определен.
+    Unspecified = 0,
+    /// Техническая стратегия.
+    Technical = 1,
+    /// Фундаментальная стратегия.
+    Fundamental = 2,
+}
+impl StrategyType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "STRATEGY_TYPE_UNSPECIFIED",
+            Self::Technical => "STRATEGY_TYPE_TECHNICAL",
+            Self::Fundamental => "STRATEGY_TYPE_FUNDAMENTAL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "STRATEGY_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "STRATEGY_TYPE_TECHNICAL" => Some(Self::Technical),
+            "STRATEGY_TYPE_FUNDAMENTAL" => Some(Self::Fundamental),
+            _ => None,
+        }
+    }
+}
+/// Направление сигнала.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SignalDirection {
+    /// Не определен.
+    Unspecified = 0,
+    /// Покупка.
+    Buy = 1,
+    /// Продажа.
+    Sell = 2,
+}
+impl SignalDirection {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "SIGNAL_DIRECTION_UNSPECIFIED",
+            Self::Buy => "SIGNAL_DIRECTION_BUY",
+            Self::Sell => "SIGNAL_DIRECTION_SELL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SIGNAL_DIRECTION_UNSPECIFIED" => Some(Self::Unspecified),
+            "SIGNAL_DIRECTION_BUY" => Some(Self::Buy),
+            "SIGNAL_DIRECTION_SELL" => Some(Self::Sell),
+            _ => None,
+        }
+    }
+}
+/// Статус сигнала.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SignalState {
+    /// Не определен.
+    Unspecified = 0,
+    /// Активный сигнал.
+    Active = 1,
+    /// Закрытый сигнал.
+    Closed = 2,
+    /// Все состояния.
+    All = 3,
+}
+impl SignalState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "SIGNAL_STATE_UNSPECIFIED",
+            Self::Active => "SIGNAL_STATE_ACTIVE",
+            Self::Closed => "SIGNAL_STATE_CLOSED",
+            Self::All => "SIGNAL_STATE_ALL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SIGNAL_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "SIGNAL_STATE_ACTIVE" => Some(Self::Active),
+            "SIGNAL_STATE_CLOSED" => Some(Self::Closed),
+            "SIGNAL_STATE_ALL" => Some(Self::All),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod signal_service_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct SignalServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl SignalServiceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> SignalServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SignalServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            SignalServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// GetStrategies — стратегии
+        pub async fn get_strategies(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetStrategiesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetStrategiesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SignalService/GetStrategies",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SignalService",
+                        "GetStrategies",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSignals — сигналы
+        pub async fn get_signals(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetSignalsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetSignalsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SignalService/GetSignals",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SignalService",
+                        "GetSignals",
                     ),
                 );
             self.inner.unary(req, path, codec).await
