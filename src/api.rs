@@ -5654,7 +5654,7 @@ pub struct CandleInstrument {
     /// Интервал свечей. Двухчасовые и четырехчасовые свечи в стриме отсчитываются с 0:00 по UTC.
     #[prost(enumeration = "SubscriptionInterval", tag = "2")]
     pub interval: i32,
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "3")]
     pub instrument_id: ::prost::alloc::string::String,
 }
@@ -5698,6 +5698,12 @@ pub struct CandleSubscription {
     /// Источник свечей.
     #[prost(enumeration = "get_candles_request::CandleSource", optional, tag = "9")]
     pub candle_source_type: ::core::option::Option<i32>,
+    /// Тикер инструмента.
+    #[prost(string, tag = "10")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "11")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Запрос на изменение статуса подписки на стаканы.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5719,7 +5725,7 @@ pub struct OrderBookInstrument {
     /// Глубина стакана.
     #[prost(int32, tag = "2")]
     pub depth: i32,
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "3")]
     pub instrument_id: ::prost::alloc::string::String,
     /// Тип стакана. Значение по умолчанию — `ORDERBOOK_TYPE_ALL`, стакан биржевой и дилера.
@@ -5763,6 +5769,12 @@ pub struct OrderBookSubscription {
     /// Действие подписки.
     #[prost(enumeration = "SubscriptionAction", tag = "8")]
     pub subscription_action: i32,
+    /// Тикер инструмента.
+    #[prost(string, tag = "9")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "10")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Изменение статуса подписки на поток обезличенных сделок.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5787,7 +5799,7 @@ pub struct TradeInstrument {
     #[deprecated]
     #[prost(string, tag = "1")]
     pub figi: ::prost::alloc::string::String,
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "2")]
     pub instrument_id: ::prost::alloc::string::String,
 }
@@ -5828,6 +5840,12 @@ pub struct TradeSubscription {
     /// Действие подписки.
     #[prost(enumeration = "SubscriptionAction", tag = "7")]
     pub subscription_action: i32,
+    /// Тикер инструмента.
+    #[prost(string, tag = "8")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "9")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Изменение статуса подписки на торговый статус инструмента.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5846,7 +5864,7 @@ pub struct InfoInstrument {
     #[deprecated]
     #[prost(string, tag = "1")]
     pub figi: ::prost::alloc::string::String,
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "2")]
     pub instrument_id: ::prost::alloc::string::String,
 }
@@ -5881,6 +5899,12 @@ pub struct InfoSubscription {
     /// Действие подписки.
     #[prost(enumeration = "SubscriptionAction", tag = "6")]
     pub subscription_action: i32,
+    /// Тикер инструмента.
+    #[prost(string, tag = "7")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "8")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Изменение статуса подписки на цену последней сделки по инструменту.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5899,7 +5923,7 @@ pub struct LastPriceInstrument {
     #[deprecated]
     #[prost(string, tag = "1")]
     pub figi: ::prost::alloc::string::String,
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "2")]
     pub instrument_id: ::prost::alloc::string::String,
 }
@@ -5934,6 +5958,12 @@ pub struct LastPriceSubscription {
     /// Действие подписки.
     #[prost(enumeration = "SubscriptionAction", tag = "6")]
     pub subscription_action: i32,
+    /// Тикер инструмента.
+    #[prost(string, tag = "7")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "8")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Пакет свечей в рамках стрима.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -5968,6 +5998,18 @@ pub struct Candle {
     /// UID инструмента.
     #[prost(string, tag = "10")]
     pub instrument_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "11")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "12")]
+    pub class_code: ::prost::alloc::string::String,
+    /// Объем торгов на покупку.
+    #[prost(int64, tag = "13")]
+    pub volume_buy: i64,
+    /// Объём торгов на продажу.
+    #[prost(int64, tag = "14")]
+    pub volume_sell: i64,
     /// Источник свечей.
     #[prost(enumeration = "CandleSource", tag = "19")]
     pub candle_source_type: i32,
@@ -6005,6 +6047,12 @@ pub struct OrderBook {
     /// Тип стакана.
     #[prost(enumeration = "OrderBookType", tag = "10")]
     pub order_book_type: i32,
+    /// Тикер инструмента.
+    #[prost(string, tag = "11")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "12")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Массив предложений/спроса.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -6040,6 +6088,12 @@ pub struct Trade {
     /// Тип источника сделки.
     #[prost(enumeration = "TradeSourceType", tag = "7")]
     pub trade_source: i32,
+    /// Тикер инструмента.
+    #[prost(string, tag = "8")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "9")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Пакет изменения торгового статуса.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -6062,6 +6116,12 @@ pub struct TradingStatus {
     /// UID инструмента.
     #[prost(string, tag = "6")]
     pub instrument_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "7")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "8")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Запрос исторических свечей.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -6079,7 +6139,7 @@ pub struct GetCandlesRequest {
     /// Интервал запрошенных свечей.
     #[prost(enumeration = "CandleInterval", tag = "4")]
     pub interval: i32,
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, optional, tag = "5")]
     pub instrument_id: ::core::option::Option<::prost::alloc::string::String>,
     /// Тип источника свечи.
@@ -6168,6 +6228,12 @@ pub struct HistoricCandle {
     /// Тип источника свечи
     #[prost(enumeration = "CandleSource", tag = "9")]
     pub candle_source: i32,
+    /// Объем торгов на покупку.
+    #[prost(int64, tag = "10")]
+    pub volume_buy: i64,
+    /// Объём торгов на продажу.
+    #[prost(int64, tag = "11")]
+    pub volume_sell: i64,
 }
 /// Запрос получения цен последних сделок.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -6176,7 +6242,7 @@ pub struct GetLastPricesRequest {
     #[deprecated]
     #[prost(string, repeated, tag = "1")]
     pub figi: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Массив идентификаторов инструмента. Принимает значения `figi` или `instrument_uid`.
+    /// Массив идентификаторов инструмента. Принимает значения `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, repeated, tag = "2")]
     pub instrument_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Тип запрашиваемой последней цены.
@@ -6205,6 +6271,12 @@ pub struct LastPrice {
     /// Время получения последней цены в часовом поясе UTC по времени биржи.
     #[prost(message, optional, tag = "3")]
     pub time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Тикер инструмента.
+    #[prost(string, tag = "9")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "10")]
+    pub class_code: ::prost::alloc::string::String,
     /// UID инструмента.
     #[prost(string, tag = "11")]
     pub instrument_uid: ::prost::alloc::string::String,
@@ -6223,6 +6295,12 @@ pub struct OpenInterest {
     /// Открытый интерес.
     #[prost(int64, tag = "3")]
     pub open_interest: i64,
+    /// Тикер инструмента.
+    #[prost(string, tag = "4")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "5")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Запрос стакана.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -6234,7 +6312,7 @@ pub struct GetOrderBookRequest {
     /// Глубина стакана.
     #[prost(int32, tag = "2")]
     pub depth: i32,
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, optional, tag = "3")]
     pub instrument_id: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -6265,6 +6343,15 @@ pub struct GetOrderBookResponse {
     /// Нижний лимит цены за 1 инструмент. Чтобы получить стоимость лота, нужно умножить на лотность инструмента. [Подробнее про перевод цен в валюту](./faq_marketdata/#_15).
     #[prost(message, optional, tag = "8")]
     pub limit_down: ::core::option::Option<Quotation>,
+    /// UID инструмента.
+    #[prost(string, tag = "9")]
+    pub instrument_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "10")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "11")]
+    pub class_code: ::prost::alloc::string::String,
     /// Время получения цены последней сделки.
     #[prost(message, optional, tag = "21")]
     pub last_price_ts: ::core::option::Option<::prost_types::Timestamp>,
@@ -6274,9 +6361,6 @@ pub struct GetOrderBookResponse {
     /// Время формирования стакана на бирже.
     #[prost(message, optional, tag = "23")]
     pub orderbook_ts: ::core::option::Option<::prost_types::Timestamp>,
-    /// UID инструмента.
-    #[prost(string, tag = "9")]
-    pub instrument_uid: ::prost::alloc::string::String,
 }
 /// Запрос получения торгового статуса.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -6285,14 +6369,14 @@ pub struct GetTradingStatusRequest {
     #[deprecated]
     #[prost(string, optional, tag = "1")]
     pub figi: ::core::option::Option<::prost::alloc::string::String>,
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`
     #[prost(string, optional, tag = "2")]
     pub instrument_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Запрос получения торгового статуса.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetTradingStatusesRequest {
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`
     #[prost(string, repeated, tag = "1")]
     pub instrument_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
@@ -6330,6 +6414,12 @@ pub struct GetTradingStatusResponse {
     /// Признак доступности только заявки по лучшей цене.
     #[prost(bool, tag = "9")]
     pub only_best_price: bool,
+    /// Тикер инструмента.
+    #[prost(string, tag = "10")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "11")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Запрос обезличенных сделок за последний час.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -6344,7 +6434,7 @@ pub struct GetLastTradesRequest {
     /// Окончание запрашиваемого периода по UTC.
     #[prost(message, optional, tag = "3")]
     pub to: ::core::option::Option<::prost_types::Timestamp>,
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`
     #[prost(string, optional, tag = "4")]
     pub instrument_id: ::core::option::Option<::prost::alloc::string::String>,
     /// Тип источника сделок. Значение по умолчанию — `TRADE_SOURCE_ALL`, все сделки.
@@ -6374,7 +6464,7 @@ pub struct GetClosePricesRequest {
 /// Запрос цен закрытия торговой сессии по инструменту.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InstrumentClosePriceRequest {
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`
     #[prost(string, tag = "1")]
     pub instrument_id: ::prost::alloc::string::String,
 }
@@ -6394,6 +6484,12 @@ pub struct InstrumentClosePriceResponse {
     /// UID инструмента.
     #[prost(string, tag = "2")]
     pub instrument_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "3")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "4")]
+    pub class_code: ::prost::alloc::string::String,
     /// Цена закрытия торговой сессии.
     #[prost(message, optional, tag = "11")]
     pub price: ::core::option::Option<Quotation>,
@@ -6687,7 +6783,7 @@ pub mod get_tech_analysis_response {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetMarketValuesRequest {
-    /// Массив идентификаторов инструментов.
+    /// Массив идентификаторов инструментов. Принимает значения `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, repeated, tag = "1")]
     pub instrument_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Массив запрашиваемых параметров.
@@ -6708,6 +6804,12 @@ pub struct MarketValueInstrument {
     /// Массив параметров инструмента.
     #[prost(message, repeated, tag = "2")]
     pub values: ::prost::alloc::vec::Vec<MarketValue>,
+    /// Тикер инструмента.
+    #[prost(string, tag = "3")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "4")]
+    pub class_code: ::prost::alloc::string::String,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MarketValue {
@@ -7110,6 +7212,8 @@ pub enum MarketValueType {
     InstrumentValueOpenInterest = 5,
     /// Теоретическая цена, возвращается только для опционов.
     InstrumentValueTheorPrice = 6,
+    /// Доходность
+    InstrumentValueYield = 7,
 }
 impl MarketValueType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -7127,6 +7231,7 @@ impl MarketValueType {
             }
             Self::InstrumentValueOpenInterest => "INSTRUMENT_VALUE_OPEN_INTEREST",
             Self::InstrumentValueTheorPrice => "INSTRUMENT_VALUE_THEOR_PRICE",
+            Self::InstrumentValueYield => "INSTRUMENT_VALUE_YIELD",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -7143,6 +7248,7 @@ impl MarketValueType {
             }
             "INSTRUMENT_VALUE_OPEN_INTEREST" => Some(Self::InstrumentValueOpenInterest),
             "INSTRUMENT_VALUE_THEOR_PRICE" => Some(Self::InstrumentValueTheorPrice),
+            "INSTRUMENT_VALUE_YIELD" => Some(Self::InstrumentValueYield),
             _ => None,
         }
     }
@@ -8047,6 +8153,9 @@ pub struct PortfolioPosition {
     /// Тикер инструмента.
     #[prost(string, tag = "32")]
     pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "33")]
+    pub class_code: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VirtualPortfolioPosition {
@@ -8089,6 +8198,9 @@ pub struct VirtualPortfolioPosition {
     /// Тикер инструмента.
     #[prost(string, tag = "32")]
     pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "33")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Баланс позиции ценной бумаги.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -8111,6 +8223,9 @@ pub struct PositionsSecurities {
     /// Тикер инструмента.
     #[prost(string, tag = "6")]
     pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "7")]
+    pub class_code: ::prost::alloc::string::String,
     /// Заблокировано на бирже.
     #[prost(bool, tag = "11")]
     pub exchange_blocked: bool,
@@ -8139,6 +8254,9 @@ pub struct PositionsFutures {
     /// Тикер инструмента.
     #[prost(string, tag = "6")]
     pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "7")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Баланс опциона.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -8152,6 +8270,9 @@ pub struct PositionsOptions {
     /// Тикер инструмента.
     #[prost(string, tag = "3")]
     pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "4")]
+    pub class_code: ::prost::alloc::string::String,
     /// Количество бумаг, заблокированных выставленными заявками.
     #[prost(int64, tag = "11")]
     pub blocked: i64,
@@ -8587,6 +8708,12 @@ pub struct OperationItem {
     /// Уникальный идентификатор позиции.
     #[prost(string, tag = "35")]
     pub position_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "36")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "37")]
+    pub class_code: ::prost::alloc::string::String,
     /// Сумма операции.
     #[prost(message, optional, tag = "41")]
     pub payment: ::core::option::Option<MoneyValue>,
@@ -9810,6 +9937,12 @@ pub struct PostOrderResponse {
     /// UID идентификатор инструмента.
     #[prost(string, tag = "17")]
     pub instrument_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "18")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "19")]
+    pub class_code: ::prost::alloc::string::String,
     /// Идентификатор ключа идемпотентности, переданный клиентом, в формате UID. Максимальная длина 36 символов.
     #[prost(string, tag = "20")]
     pub order_request_id: ::prost::alloc::string::String,
@@ -10000,6 +10133,12 @@ pub struct OrderState {
     /// Идентификатор ключа идемпотентности, переданный клиентом, в формате UID. Максимальная длина 36 символов.
     #[prost(string, tag = "20")]
     pub order_request_id: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "21")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "22")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Сделки в рамках торгового поручения.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -11303,6 +11442,12 @@ pub struct StopOrder {
     /// Идентификатор биржевой заявки.
     #[prost(string, optional, tag = "17")]
     pub exchange_order_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Тикер инструмента.
+    #[prost(string, tag = "18")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "19")]
+    pub class_code: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `StopOrder`.
 pub mod stop_order {
@@ -12782,6 +12927,36 @@ pub mod sandbox_service_client {
                     GrpcMethod::new(
                         "tinkoff.public.invest.api.contract.v1.SandboxService",
                         "GetSandboxOrderState",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetSandboxOrderPrice — получить предварительную стоимость для лимитной заявки
+        pub async fn get_sandbox_order_price(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetOrderPriceRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetOrderPriceResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOrderPrice",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.SandboxService",
+                        "GetSandboxOrderPrice",
                     ),
                 );
             self.inner.unary(req, path, codec).await
