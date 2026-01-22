@@ -531,6 +531,9 @@ pub struct FilterOptionsRequest {
     /// Идентификатор позиции базового актива опциона.
     #[prost(string, optional, tag = "2")]
     pub basic_asset_position_uid: ::core::option::Option<::prost::alloc::string::String>,
+    /// Идентификатор базового инструмента, принимает значение принимает значения figi, instrument_uid или ticker+"\_"+classCode.
+    #[prost(string, optional, tag = "3")]
+    pub basic_instrument_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Информация об облигации.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1247,6 +1250,9 @@ pub struct Currency {
     /// Тесты, которые необходимо пройти клиенту, чтобы совершать сделки по инструменту.
     #[prost(string, repeated, tag = "30")]
     pub required_tests: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Уникальный идентификатор актива.
+    #[prost(string, tag = "31")]
+    pub asset_uid: ::prost::alloc::string::String,
     /// Признак доступности для ИИС.
     #[prost(bool, tag = "41")]
     pub for_iis_flag: bool,
@@ -8886,6 +8892,102 @@ pub struct ChildOperationItem {
     #[prost(message, optional, tag = "2")]
     pub payment: ::core::option::Option<MoneyValue>,
 }
+/// Запрос установки stream-соединения операций.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OperationsStreamRequest {
+    /// Массив идентификаторов счетов пользователя.
+    #[prost(string, repeated, tag = "1")]
+    pub accounts: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Запрос настройки пинга.
+    #[prost(message, optional, tag = "15")]
+    pub ping_settings: ::core::option::Option<PingDelaySettings>,
+}
+/// Информация по операциям.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OperationsStreamResponse {
+    #[prost(oneof = "operations_stream_response::Payload", tags = "1, 2, 3")]
+    pub payload: ::core::option::Option<operations_stream_response::Payload>,
+}
+/// Nested message and enum types in `OperationsStreamResponse`.
+pub mod operations_stream_response {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Payload {
+        /// Объект результата подписки.
+        #[prost(message, tag = "1")]
+        Subscriptions(super::OperationsSubscriptionResult),
+        /// Объект стриминга операций.
+        #[prost(message, tag = "2")]
+        Operation(super::OperationData),
+        /// Проверка активности стрима.
+        #[prost(message, tag = "3")]
+        Ping(super::Ping),
+    }
+}
+/// Объект результата подписки.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OperationsSubscriptionResult {
+    /// Массив счетов клиента.
+    #[prost(string, repeated, tag = "1")]
+    pub accounts: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Результат подписки.
+    #[prost(enumeration = "OperationsAccountSubscriptionStatus", tag = "2")]
+    pub subscription_status: i32,
+    /// Уникальный идентификатор запроса, подробнее: [tracking_id](/invest/intro/developer/protocols/grpc#tracking-id).
+    #[prost(string, tag = "7")]
+    pub tracking_id: ::prost::alloc::string::String,
+    /// Идентификатор открытого соединения
+    #[prost(string, tag = "8")]
+    pub stream_id: ::prost::alloc::string::String,
+}
+/// Данные об операции.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct OperationData {
+    /// Идентификатор счета.
+    #[prost(string, tag = "1")]
+    pub broker_account_id: ::prost::alloc::string::String,
+    /// Номер поручения.
+    #[prost(string, tag = "2")]
+    pub id: ::prost::alloc::string::String,
+    /// Номер родительского поручения.
+    #[prost(string, tag = "3")]
+    pub parent_operation_id: ::prost::alloc::string::String,
+    /// Название инструмента.
+    #[prost(string, tag = "4")]
+    pub name: ::prost::alloc::string::String,
+    /// Дата.
+    #[prost(message, optional, tag = "5")]
+    pub date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Тип операции.
+    #[prost(enumeration = "OperationType", tag = "6")]
+    pub r#type: i32,
+    /// Статус поручения.
+    #[prost(enumeration = "OperationState", tag = "7")]
+    pub state: i32,
+    /// Уникальный идентификатор инструмента.
+    #[prost(string, tag = "8")]
+    pub instrument_uid: ::prost::alloc::string::String,
+    /// FIGI-идентификатор инструмента.
+    #[prost(string, tag = "9")]
+    pub figi: ::prost::alloc::string::String,
+    /// Тип инструмента.
+    #[prost(string, tag = "10")]
+    pub instrument_type: ::prost::alloc::string::String,
+    /// Тип инструмента.
+    #[prost(enumeration = "InstrumentType", tag = "11")]
+    pub instrument_kind: i32,
+    /// Идентификатор позиции.
+    #[prost(string, tag = "12")]
+    pub position_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "13")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "14")]
+    pub class_code: ::prost::alloc::string::String,
+    /// Сумма операции.
+    #[prost(message, optional, tag = "15")]
+    pub payment: ::core::option::Option<MoneyValue>,
+}
 /// Статус запрашиваемых операций.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -9068,6 +9170,14 @@ pub enum OperationType {
     OptionExpiration = 64,
     /// Экспирация фьючерса.
     FutureExpiration = 65,
+    /// Прочие комиссии;
+    OtherFee = 66,
+    /// Операция по счету;
+    Other = 67,
+    /// погашение ЦФА-токена;
+    DfaRedemption = 68,
+    /// отмена заявки на первичное размещение по ЦФА;
+    PrimaryOrder = 69,
 }
 impl OperationType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -9141,6 +9251,10 @@ impl OperationType {
             Self::OverIncome => "OPERATION_TYPE_OVER_INCOME",
             Self::OptionExpiration => "OPERATION_TYPE_OPTION_EXPIRATION",
             Self::FutureExpiration => "OPERATION_TYPE_FUTURE_EXPIRATION",
+            Self::OtherFee => "OPERATION_TYPE_OTHER_FEE",
+            Self::Other => "OPERATION_TYPE_OTHER",
+            Self::DfaRedemption => "OPERATION_TYPE_DFA_REDEMPTION",
+            Self::PrimaryOrder => "OPERATION_TYPE_PRIMARY_ORDER",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -9217,6 +9331,10 @@ impl OperationType {
             "OPERATION_TYPE_OVER_INCOME" => Some(Self::OverIncome),
             "OPERATION_TYPE_OPTION_EXPIRATION" => Some(Self::OptionExpiration),
             "OPERATION_TYPE_FUTURE_EXPIRATION" => Some(Self::FutureExpiration),
+            "OPERATION_TYPE_OTHER_FEE" => Some(Self::OtherFee),
+            "OPERATION_TYPE_OTHER" => Some(Self::Other),
+            "OPERATION_TYPE_DFA_REDEMPTION" => Some(Self::DfaRedemption),
+            "OPERATION_TYPE_PRIMARY_ORDER" => Some(Self::PrimaryOrder),
             _ => None,
         }
     }
@@ -9308,6 +9426,59 @@ impl PositionsAccountSubscriptionStatus {
             }
             "POSITIONS_SUBSCRIPTION_STATUS_INTERNAL_ERROR" => {
                 Some(Self::PositionsSubscriptionStatusInternalError)
+            }
+            _ => None,
+        }
+    }
+}
+/// Результат подписки.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum OperationsAccountSubscriptionStatus {
+    /// Тип не определен.
+    OperationsSubscriptionStatusUnspecified = 0,
+    /// Успешно.
+    OperationsSubscriptionStatusSuccess = 1,
+    /// Счет не найден или недостаточно прав.
+    OperationsSubscriptionStatusAccountNotFound = 2,
+    /// Произошла ошибка.
+    OperationsSubscriptionStatusInternalError = 3,
+}
+impl OperationsAccountSubscriptionStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::OperationsSubscriptionStatusUnspecified => {
+                "OPERATIONS_SUBSCRIPTION_STATUS_UNSPECIFIED"
+            }
+            Self::OperationsSubscriptionStatusSuccess => {
+                "OPERATIONS_SUBSCRIPTION_STATUS_SUCCESS"
+            }
+            Self::OperationsSubscriptionStatusAccountNotFound => {
+                "OPERATIONS_SUBSCRIPTION_STATUS_ACCOUNT_NOT_FOUND"
+            }
+            Self::OperationsSubscriptionStatusInternalError => {
+                "OPERATIONS_SUBSCRIPTION_STATUS_INTERNAL_ERROR"
+            }
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "OPERATIONS_SUBSCRIPTION_STATUS_UNSPECIFIED" => {
+                Some(Self::OperationsSubscriptionStatusUnspecified)
+            }
+            "OPERATIONS_SUBSCRIPTION_STATUS_SUCCESS" => {
+                Some(Self::OperationsSubscriptionStatusSuccess)
+            }
+            "OPERATIONS_SUBSCRIPTION_STATUS_ACCOUNT_NOT_FOUND" => {
+                Some(Self::OperationsSubscriptionStatusAccountNotFound)
+            }
+            "OPERATIONS_SUBSCRIPTION_STATUS_INTERNAL_ERROR" => {
+                Some(Self::OperationsSubscriptionStatusInternalError)
             }
             _ => None,
         }
@@ -9767,6 +9938,36 @@ pub mod operations_stream_service_client {
                     GrpcMethod::new(
                         "tinkoff.public.invest.api.contract.v1.OperationsStreamService",
                         "PositionsStream",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
+        }
+        /// OperationsStream — стрим обновлений операций
+        pub async fn operations_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::OperationsStreamRequest>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::OperationsStreamResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.OperationsStreamService/OperationsStream",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.OperationsStreamService",
+                        "OperationsStream",
                     ),
                 );
             self.inner.server_streaming(req, path, codec).await
@@ -10389,6 +10590,9 @@ pub mod order_state_stream_response {
         /// Номер счета.
         #[prost(string, tag = "13")]
         pub account_id: ::prost::alloc::string::String,
+        /// Идентификатор торгового поручения.
+        #[prost(string, tag = "14")]
+        pub trade_order_id: ::prost::alloc::string::String,
         /// Начальная цена заявки.
         #[prost(message, optional, tag = "22")]
         pub initial_order_price: ::core::option::Option<super::MoneyValue>,
@@ -12119,6 +12323,20 @@ pub struct CurrencyTransferRequest {
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CurrencyTransferResponse {}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PayInRequest {
+    /// Номер счета списания.
+    #[prost(string, tag = "1")]
+    pub from_account_id: ::prost::alloc::string::String,
+    /// Номер брокерского счета зачисления.
+    #[prost(string, tag = "2")]
+    pub to_account_id: ::prost::alloc::string::String,
+    /// Сумма перевода с указанием валюты.
+    #[prost(message, optional, tag = "3")]
+    pub amount: ::core::option::Option<MoneyValue>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PayInResponse {}
 /// Тип счeта.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -12523,6 +12741,34 @@ pub mod users_service_client {
                     GrpcMethod::new(
                         "tinkoff.public.invest.api.contract.v1.UsersService",
                         "CurrencyTransfer",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// PayIn — пополнение брокерского счета
+        /// Пополнить брокерский счёт с банковского
+        pub async fn pay_in(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PayInRequest>,
+        ) -> std::result::Result<tonic::Response<super::PayInResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.UsersService/PayIn",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.UsersService",
+                        "PayIn",
                     ),
                 );
             self.inner.unary(req, path, codec).await
