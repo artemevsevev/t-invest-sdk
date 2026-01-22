@@ -4,16 +4,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .out_dir("../src")
         .compile_protos(
             &[
-                "../investAPI/src/docs/contracts/instruments.proto",
-                "../investAPI/src/docs/contracts/marketdata.proto",
-                "../investAPI/src/docs/contracts/operations.proto",
-                "../investAPI/src/docs/contracts/orders.proto",
-                "../investAPI/src/docs/contracts/sandbox.proto",
-                "../investAPI/src/docs/contracts/signals.proto",
-                "../investAPI/src/docs/contracts/stoporders.proto",
-                "../investAPI/src/docs/contracts/users.proto",
+                "../contracts/instruments.proto",
+                "../contracts/marketdata.proto",
+                "../contracts/operations.proto",
+                "../contracts/orders.proto",
+                "../contracts/sandbox.proto",
+                "../contracts/signals.proto",
+                "../contracts/stoporders.proto",
+                "../contracts/users.proto",
             ],
-            &["../investAPI/src/docs/contracts/"],
+            &["../contracts/"],
         )?;
 
     std::fs::rename(
