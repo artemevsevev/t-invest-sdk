@@ -126,6 +126,8 @@ pub enum InstrumentType {
     Index = 9,
     /// Товар.
     Commodity = 10,
+    /// Цифровой актив.
+    Dfa = 11,
 }
 impl InstrumentType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -145,6 +147,7 @@ impl InstrumentType {
             Self::ClearingCertificate => "INSTRUMENT_TYPE_CLEARING_CERTIFICATE",
             Self::Index => "INSTRUMENT_TYPE_INDEX",
             Self::Commodity => "INSTRUMENT_TYPE_COMMODITY",
+            Self::Dfa => "INSTRUMENT_TYPE_DFA",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -161,6 +164,7 @@ impl InstrumentType {
             "INSTRUMENT_TYPE_CLEARING_CERTIFICATE" => Some(Self::ClearingCertificate),
             "INSTRUMENT_TYPE_INDEX" => Some(Self::Index),
             "INSTRUMENT_TYPE_COMMODITY" => Some(Self::Commodity),
+            "INSTRUMENT_TYPE_DFA" => Some(Self::Dfa),
             _ => None,
         }
     }
@@ -236,6 +240,8 @@ pub enum SecurityTradingStatus {
     DealerBreakInTrading = 15,
     /// Недоступна торговля в режиме внутренней ликвидности брокера.
     DealerNotAvailableForTrading = 16,
+    /// Аукцион обновления цен.
+    StabilizationAuction = 17,
 }
 impl SecurityTradingStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -271,6 +277,7 @@ impl SecurityTradingStatus {
             Self::DealerNotAvailableForTrading => {
                 "SECURITY_TRADING_STATUS_DEALER_NOT_AVAILABLE_FOR_TRADING"
             }
+            Self::StabilizationAuction => "SECURITY_TRADING_STATUS_STABILIZATION_AUCTION",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -304,6 +311,9 @@ impl SecurityTradingStatus {
             }
             "SECURITY_TRADING_STATUS_DEALER_NOT_AVAILABLE_FOR_TRADING" => {
                 Some(Self::DealerNotAvailableForTrading)
+            }
+            "SECURITY_TRADING_STATUS_STABILIZATION_AUCTION" => {
+                Some(Self::StabilizationAuction)
             }
             _ => None,
         }
@@ -502,7 +512,7 @@ pub struct TradingDay {
 /// Запрос получения инструмента по идентификатору.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct InstrumentRequest {
-    /// Тип идентификатора инструмента. Возможные значения — `figi`, `ticker`. [Подробнее об идентификации инструментов](./faq_identification/).
+    /// Тип идентификатора инструмента. Возможные значения — `figi`, `ticker`. [Подробнее об идентификации инструментов](/invest/intro/intro/faq_identification).
     #[prost(enumeration = "InstrumentIdType", tag = "1")]
     pub id_type: i32,
     /// Идентификатор `class_code`. Обязательный, если `id_type = ticker`.
@@ -562,7 +572,7 @@ pub struct GetBondCouponsRequest {
     /// Окончание запрашиваемого периода по UTC. Фильтрация по `coupon_date` — дата выплаты купона.
     #[prost(message, optional, tag = "3")]
     pub to: ::core::option::Option<::prost_types::Timestamp>,
-    /// Идентификатор инструмента — `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "4")]
     pub instrument_id: ::prost::alloc::string::String,
 }
@@ -651,7 +661,7 @@ pub struct GetBondEventsResponse {
 pub mod get_bond_events_response {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
     pub struct BondEvent {
-        /// Идентификатор инструмента.
+        /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
         #[prost(string, tag = "2")]
         pub instrument_id: ::prost::alloc::string::String,
         /// Номер события для данного типа события.
@@ -2064,7 +2074,7 @@ pub struct GetAccruedInterestsRequest {
     /// Окончание запрашиваемого периода по UTC.
     #[prost(message, optional, tag = "3")]
     pub to: ::core::option::Option<::prost_types::Timestamp>,
-    /// Идентификатор инструмента — `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "4")]
     pub instrument_id: ::prost::alloc::string::String,
 }
@@ -2098,7 +2108,7 @@ pub struct GetFuturesMarginRequest {
     #[deprecated]
     #[prost(string, tag = "1")]
     pub figi: ::prost::alloc::string::String,
-    /// Идентификатор инструмента — `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "4")]
     pub instrument_id: ::prost::alloc::string::String,
 }
@@ -2261,7 +2271,7 @@ pub struct GetDividendsRequest {
     /// Окончание запрашиваемого периода по UTC. Фильтрация происходит по параметру `record_date` — дата фиксации реестра.
     #[prost(message, optional, tag = "3")]
     pub to: ::core::option::Option<::prost_types::Timestamp>,
-    /// Идентификатор инструмента — `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "4")]
     pub instrument_id: ::prost::alloc::string::String,
 }
@@ -3306,7 +3316,7 @@ pub mod get_asset_fundamentals_response {
 /// Запрос отчетов эмитентов
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetAssetReportsRequest {
-    /// Идентификатор инструмента в формате UID.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "1")]
     pub instrument_id: ::prost::alloc::string::String,
     /// Начало запрашиваемого периода по UTC.
@@ -3461,7 +3471,7 @@ pub mod get_consensus_forecasts_response {
 /// Запрос прогнозов инвестдомов.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetForecastRequest {
-    /// Идентификатор инструмента.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "1")]
     pub instrument_id: ::prost::alloc::string::String,
 }
@@ -3552,7 +3562,7 @@ pub mod get_forecast_response {
 /// Запрос ставок риска
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RiskRatesRequest {
-    /// Идентификаторы инструментов.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, repeated, tag = "1")]
     pub instrument_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
@@ -3620,10 +3630,13 @@ pub mod trading_interval {
 /// Запрос сделок по инсайдерам
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetInsiderDealsRequest {
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "1")]
     pub instrument_id: ::prost::alloc::string::String,
+    /// Количество выводимых записей в ответе, не больше 100.
     #[prost(int32, tag = "2")]
     pub limit: i32,
+    /// Курсор.
     #[prost(string, optional, tag = "3")]
     pub next_cursor: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -3731,6 +3744,118 @@ pub mod get_insider_deals_response {
             }
         }
     }
+}
+/// Запрос цифровых активов
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DfasRequest {}
+/// Цифровой актив
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DfaResponse {
+    /// Уникальный идентификатор инструмента.
+    #[prost(string, tag = "1")]
+    pub uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "2")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Название инструмента.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// Уникальный идентификатор позиции.
+    #[prost(string, tag = "4")]
+    pub position_uid: ::prost::alloc::string::String,
+    /// Шаг цены.
+    #[prost(message, optional, tag = "5")]
+    pub min_price_increment: ::core::option::Option<Quotation>,
+    /// Количество лотов.
+    #[prost(int32, tag = "6")]
+    pub lot: i32,
+    /// Номинал.
+    #[prost(message, optional, tag = "7")]
+    pub nominal: ::core::option::Option<MoneyValue>,
+    /// Валюта.
+    #[prost(string, tag = "8")]
+    pub currency: ::prost::alloc::string::String,
+    /// Дата погашения ЦФА в формате UTC.
+    #[prost(message, optional, tag = "9")]
+    pub maturity_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Признак доступности для операций шорт.
+    #[prost(bool, tag = "10")]
+    pub short_enabled_flag: bool,
+    /// Признак доступности торгов по бумаге через API.
+    #[prost(bool, tag = "11")]
+    pub api_trade_available_flag: bool,
+    /// Признак доступности для покупки.
+    #[prost(bool, tag = "12")]
+    pub buy_available_flag: bool,
+    /// Признак доступности для продажи.
+    #[prost(bool, tag = "13")]
+    pub sell_available_flag: bool,
+    /// Признак доступности выставления лимитной заявки по инструменту.
+    #[prost(bool, tag = "14")]
+    pub limit_order_available_flag: bool,
+    /// Признак доступности выставления рыночной заявки по инструменту.
+    #[prost(bool, tag = "15")]
+    pub market_order_available_flag: bool,
+    /// Признак доступности выставления bestprice заявки по инструменту.
+    #[prost(bool, tag = "16")]
+    pub bestprice_order_available_flag: bool,
+    /// Возможность покупки/продажи на ИИС.
+    #[prost(bool, tag = "17")]
+    pub for_iis_flag: bool,
+    /// Флаг отображающий доступность торговли инструментом только для квалифицированных инвесторов.
+    #[prost(bool, tag = "18")]
+    pub for_qual_investor_flag: bool,
+    /// Тип актива. Возможные значения: credit_portfolio_dfa, debt_dfa.
+    #[prost(string, tag = "19")]
+    pub r#type: ::prost::alloc::string::String,
+    /// Базовые активы, входящие в ЦФА.
+    #[prost(message, repeated, tag = "20")]
+    pub basic_assets: ::prost::alloc::vec::Vec<dfa_response::BasicAsset>,
+    /// Прогнозная доходность смарт-портфелей, в виде интервала в %.
+    #[prost(message, optional, tag = "21")]
+    pub forecast_yield: ::core::option::Option<dfa_response::ForecastYield>,
+    /// Доходность к погашению в %.
+    #[prost(message, optional, tag = "22")]
+    pub yield_to_maturity: ::core::option::Option<Quotation>,
+    /// Величина купона.
+    #[prost(message, optional, tag = "23")]
+    pub coupon_value: ::core::option::Option<Quotation>,
+    /// Количество выплат в год.
+    #[prost(int32, tag = "24")]
+    pub coupon_payment_frequency: i32,
+    /// Дата выплаты купона.
+    #[prost(message, optional, tag = "25")]
+    pub coupon_payment_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Значение НКД (накопленного купонного дохода) на дату.
+    #[prost(message, optional, tag = "26")]
+    pub aci_value: ::core::option::Option<Quotation>,
+}
+/// Nested message and enum types in `DfaResponse`.
+pub mod dfa_response {
+    /// Базовый актив.
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct BasicAsset {
+        /// UID базового актива
+        #[prost(string, tag = "1")]
+        pub uid: ::prost::alloc::string::String,
+    }
+    /// Прогнозная доходность смарт-портфелей.
+    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct ForecastYield {
+        /// Минимальное значение прогнозной доходности в %
+        #[prost(message, optional, tag = "1")]
+        pub min_value: ::core::option::Option<super::Quotation>,
+        /// Максимальное значение прогнозной доходности в %
+        #[prost(message, optional, tag = "2")]
+        pub max_value: ::core::option::Option<super::Quotation>,
+    }
+}
+/// Цифровые активы
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DfasResponse {
+    /// Массив инструментов.
+    #[prost(message, repeated, tag = "1")]
+    pub instruments: ::prost::alloc::vec::Vec<DfaResponse>,
 }
 /// Тип купонов.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -3927,7 +4052,7 @@ impl OptionSettlementType {
         }
     }
 }
-/// Тип идентификатора инструмента. [Подробнее об идентификации инструментов](./faq_identification/).
+/// Тип идентификатора инструмента. [Подробнее об идентификации инструментов](/invest/intro/intro/faq_identification).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum InstrumentIdType {
@@ -3941,6 +4066,8 @@ pub enum InstrumentIdType {
     Uid = 3,
     /// Идентификатор позиции.
     PositionUid = 4,
+    /// Универсальный тип идентификатора инструмента.
+    Id = 5,
 }
 impl InstrumentIdType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -3954,6 +4081,7 @@ impl InstrumentIdType {
             Self::Ticker => "INSTRUMENT_ID_TYPE_TICKER",
             Self::Uid => "INSTRUMENT_ID_TYPE_UID",
             Self::PositionUid => "INSTRUMENT_ID_TYPE_POSITION_UID",
+            Self::Id => "INSTRUMENT_ID_TYPE_ID",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -3964,6 +4092,7 @@ impl InstrumentIdType {
             "INSTRUMENT_ID_TYPE_TICKER" => Some(Self::Ticker),
             "INSTRUMENT_ID_TYPE_UID" => Some(Self::Uid),
             "INSTRUMENT_ID_TYPE_POSITION_UID" => Some(Self::PositionUid),
+            "INSTRUMENT_ID_TYPE_ID" => Some(Self::Id),
             _ => None,
         }
     }
@@ -4808,6 +4937,60 @@ pub mod instruments_service_client {
                     GrpcMethod::new(
                         "tinkoff.public.invest.api.contract.v1.InstrumentsService",
                         "Shares",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// DfaBy — получить цифровой актив по ее идентификатору
+        pub async fn dfa_by(
+            &mut self,
+            request: impl tonic::IntoRequest<super::InstrumentRequest>,
+        ) -> std::result::Result<tonic::Response<super::DfaResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.InstrumentsService/DfaBy",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                        "DfaBy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Dfas — список цифровых активов
+        pub async fn dfas(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DfasRequest>,
+        ) -> std::result::Result<tonic::Response<super::DfasResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Dfas",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                        "Dfas",
                     ),
                 );
             self.inner.unary(req, path, codec).await
@@ -8047,6 +8230,9 @@ pub struct PortfolioResponse {
     /// Относительная доходность в день в %.
     #[prost(message, optional, tag = "16")]
     pub daily_yield_relative: ::core::option::Option<Quotation>,
+    /// Общая стоимость смарт-активов в портфеле в рублях.
+    #[prost(message, optional, tag = "17")]
+    pub total_amount_dfa: ::core::option::Option<MoneyValue>,
 }
 /// Запрос позиций портфеля по счету.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -8356,6 +8542,9 @@ pub struct GetBrokerReportResponse {
     /// Текущая страница, начинается с 0.
     #[prost(int32, tag = "4")]
     pub page: i32,
+    /// Идентификатор задачи формирования брокерского отчета.
+    #[prost(string, tag = "5")]
+    pub task_id: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BrokerReport {
@@ -8625,7 +8814,7 @@ pub struct GetOperationsByCursorRequest {
     /// Идентификатор счета клиента, обязательный параметр. Остальные параметры опциональны.
     #[prost(string, tag = "1")]
     pub account_id: ::prost::alloc::string::String,
-    /// Идентификатор инструмента — FIGI или UID инструмента.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, optional, tag = "2")]
     pub instrument_id: ::core::option::Option<::prost::alloc::string::String>,
     /// Начало периода по UTC.
@@ -10071,7 +10260,7 @@ pub struct PostOrderRequest {
     /// Идентификатор запроса выставления поручения для целей идемпотентности в формате UID. Максимальная длина 36 символов.
     #[prost(string, tag = "7")]
     pub order_id: ::prost::alloc::string::String,
-    /// Идентификатор инструмента, принимает значения Figi или Instrument_uid.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "8")]
     pub instrument_id: ::prost::alloc::string::String,
     /// Алгоритм исполнения поручения, применяется только к лимитной заявке.
@@ -10154,7 +10343,7 @@ pub struct PostOrderResponse {
 /// Запрос выставления асинхронного торгового поручения.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PostOrderAsyncRequest {
-    /// Идентификатор инструмента, принимает значения Figi или Instrument_uid.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "1")]
     pub instrument_id: ::prost::alloc::string::String,
     /// Количество лотов.
@@ -10363,6 +10552,9 @@ pub struct ReplaceOrderRequest {
     /// Номер счета.
     #[prost(string, tag = "1")]
     pub account_id: ::prost::alloc::string::String,
+    /// Тип идентификатора заявки.
+    #[prost(enumeration = "OrderIdType", optional, tag = "5")]
+    pub order_id_type: ::core::option::Option<i32>,
     /// Идентификатор заявки на бирже.
     #[prost(string, tag = "6")]
     pub order_id: ::prost::alloc::string::String,
@@ -10388,7 +10580,7 @@ pub struct GetMaxLotsRequest {
     /// Номер счета
     #[prost(string, tag = "1")]
     pub account_id: ::prost::alloc::string::String,
-    /// Идентификатор инструмента, принимает значения Figi или instrument_uid
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "2")]
     pub instrument_id: ::prost::alloc::string::String,
     /// Цена инструмента
@@ -10443,7 +10635,7 @@ pub struct GetOrderPriceRequest {
     /// Номер счета
     #[prost(string, tag = "1")]
     pub account_id: ::prost::alloc::string::String,
-    /// Идентификатор инструмента, принимает значения Figi или instrument_uid
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "2")]
     pub instrument_id: ::prost::alloc::string::String,
     /// Цена инструмента
@@ -11499,7 +11691,7 @@ pub struct PostStopOrderRequest {
     /// Дата и время окончания действия стоп-заявки по UTC. Для `ExpirationType = GoodTillDate` заполнение обязательно, для `GoodTillCancel` игнорируется.
     #[prost(message, optional, tag = "9")]
     pub expire_date: ::core::option::Option<::prost_types::Timestamp>,
-    /// Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`.
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
     #[prost(string, tag = "10")]
     pub instrument_id: ::prost::alloc::string::String,
     /// Тип дочерней биржевой заявки.
@@ -11520,6 +11712,9 @@ pub struct PostStopOrderRequest {
     /// Согласие на выставление заявки, которая может привести к непокрытой позиции, по умолчанию false.
     #[prost(bool, tag = "16")]
     pub confirm_margin_trade: bool,
+    /// Признак необходимости моментальной активации, используется только для трейлинг-стопа.
+    #[prost(bool, optional, tag = "17")]
+    pub instant_execution: ::core::option::Option<bool>,
 }
 /// Nested message and enum types in `PostStopOrderRequest`.
 pub mod post_stop_order_request {
@@ -11652,6 +11847,9 @@ pub struct StopOrder {
     /// Класс-код (секция торгов).
     #[prost(string, tag = "19")]
     pub class_code: ::prost::alloc::string::String,
+    /// Признак необходимости моментальной активации, используется только для трейлинг-стопа.
+    #[prost(bool, tag = "20")]
+    pub instant_execution: bool,
 }
 /// Nested message and enum types in `StopOrder`.
 pub mod stop_order {
@@ -12210,6 +12408,9 @@ pub struct GetMarginAttributesResponse {
     /// Скорректированная маржа. Начальная маржа, в которой плановые позиции рассчитываются с учeтом активных заявок на покупку позиций лонг или продажу позиций шорт.
     #[prost(message, optional, tag = "6")]
     pub corrected_margin: ::core::option::Option<MoneyValue>,
+    /// Размер гарантийного обеспечения, заблокированного под фьючерсы.
+    #[prost(message, optional, tag = "7")]
+    pub guarantee_for_futures: ::core::option::Option<MoneyValue>,
 }
 /// Запрос текущих лимитов пользователя.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -12337,6 +12538,39 @@ pub struct PayInRequest {
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct PayInResponse {}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetAccountValuesRequest {
+    /// Массив счетов пользователя.
+    #[prost(string, repeated, tag = "1")]
+    pub accounts: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Массив запрашиваемых параметров.
+    #[prost(enumeration = "AccountValue", repeated, tag = "2")]
+    pub values: ::prost::alloc::vec::Vec<i32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetAccountValuesResponse {
+    /// Массив счетов с параметрами.
+    #[prost(message, repeated, tag = "1")]
+    pub accounts: ::prost::alloc::vec::Vec<AccountValuesWithParameters>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AccountValuesWithParameters {
+    /// Номер счета.
+    #[prost(string, tag = "1")]
+    pub account_id: ::prost::alloc::string::String,
+    /// Массив параметров инструмента.
+    #[prost(message, repeated, tag = "2")]
+    pub values: ::prost::alloc::vec::Vec<InstrumentParameter>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct InstrumentParameter {
+    /// Тип запрашиваемого параметра.
+    #[prost(enumeration = "AccountValue", tag = "1")]
+    pub name: i32,
+    /// Значение запрашиваемого параметра.
+    #[prost(message, optional, tag = "2")]
+    pub value: ::core::option::Option<MoneyValue>,
+}
 /// Тип счeта.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -12355,6 +12589,8 @@ pub enum AccountType {
     Debit = 5,
     /// Накопительный счeт.
     Saving = 6,
+    /// Смарт-счет.
+    Dfa = 7,
 }
 impl AccountType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -12370,6 +12606,7 @@ impl AccountType {
             Self::InvestFund => "ACCOUNT_TYPE_INVEST_FUND",
             Self::Debit => "ACCOUNT_TYPE_DEBIT",
             Self::Saving => "ACCOUNT_TYPE_SAVING",
+            Self::Dfa => "ACCOUNT_TYPE_DFA",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -12382,6 +12619,7 @@ impl AccountType {
             "ACCOUNT_TYPE_INVEST_FUND" => Some(Self::InvestFund),
             "ACCOUNT_TYPE_DEBIT" => Some(Self::Debit),
             "ACCOUNT_TYPE_SAVING" => Some(Self::Saving),
+            "ACCOUNT_TYPE_DFA" => Some(Self::Dfa),
             _ => None,
         }
     }
@@ -12464,6 +12702,38 @@ impl AccessLevel {
             }
             "ACCOUNT_ACCESS_LEVEL_READ_ONLY" => Some(Self::AccountAccessLevelReadOnly),
             "ACCOUNT_ACCESS_LEVEL_NO_ACCESS" => Some(Self::AccountAccessLevelNoAccess),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AccountValue {
+    /// Не определён.
+    Unspecified = 0,
+    /// Размер комиссии за маржинальное кредитование.
+    MarginFee = 1,
+    /// Остаток доступного лимита с текущей комиссией.
+    AmountWithoutExtraFee = 2,
+}
+impl AccountValue {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "ACCOUNT_VALUE_UNSPECIFIED",
+            Self::MarginFee => "ACCOUNT_VALUE_MARGIN_FEE",
+            Self::AmountWithoutExtraFee => "ACCOUNT_VALUE_AMOUNT_WITHOUT_EXTRA_FEE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ACCOUNT_VALUE_UNSPECIFIED" => Some(Self::Unspecified),
+            "ACCOUNT_VALUE_MARGIN_FEE" => Some(Self::MarginFee),
+            "ACCOUNT_VALUE_AMOUNT_WITHOUT_EXTRA_FEE" => Some(Self::AmountWithoutExtraFee),
             _ => None,
         }
     }
@@ -12769,6 +13039,37 @@ pub mod users_service_client {
                     GrpcMethod::new(
                         "tinkoff.public.invest.api.contract.v1.UsersService",
                         "PayIn",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetAccountValues — дополнительные показатели счетов
+        /// Метод предназначен для получения дополнительных показателей счетов
+        pub async fn get_account_values(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAccountValuesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetAccountValuesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.UsersService/GetAccountValues",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.UsersService",
+                        "GetAccountValues",
                     ),
                 );
             self.inner.unary(req, path, codec).await

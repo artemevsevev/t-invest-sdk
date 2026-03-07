@@ -1,22 +1,22 @@
 # T-Invest API Rust SDK
 
-Версия API [1.44](https://opensource.tbank.ru/invest/invest-contracts/-/commit/d85c4b18c747912412f1f74aa2503fdd7d1f1324)
+Версия API [1.48](https://opensource.tbank.ru/invest/invest-contracts/-/releases/1.48)
 
-[Документация для разработчиков](https://developer.tbank.ru/invest/intro/intro)
+Документация для разработчиков: [https://developer.tbank.ru/invest/intro/intro](https://developer.tbank.ru/invest/intro/intro)
 
-# Пример
+## Пример
 
-## Cargo.toml
+### Cargo.toml
 
 ```toml
 [dependencies]
-t-invest-sdk = "0.14.0"
+t-invest-sdk = "0.15.0"
 tokio = { version = "1.47.1", features = ["full"] }
 flume = "0.11.1"
 anyhow = "1.0.99"
 ```
 
-## main.rs
+### main.rs
 
 ```rust
 use anyhow::anyhow;
