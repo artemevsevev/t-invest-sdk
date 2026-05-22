@@ -545,6 +545,16 @@ pub struct FilterOptionsRequest {
     #[prost(string, optional, tag = "3")]
     pub basic_instrument_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// Запрос получения актуальных новостей
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct NewsRequest {
+    /// Идентификатор элемента, с которого начать формировать ответ.
+    #[prost(int64, optional, tag = "1")]
+    pub cursor: ::core::option::Option<i64>,
+    /// Лимит количества новостей в ответе. По умолчанию 1000.
+    #[prost(int32, optional, tag = "2")]
+    pub limit: ::core::option::Option<i32>,
+}
 /// Информация об облигации.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct BondResponse {
@@ -991,6 +1001,77 @@ pub struct StructuredNotesResponse {
     #[prost(message, repeated, tag = "1")]
     pub instruments: ::prost::alloc::vec::Vec<StructuredNote>,
 }
+/// Данные по актуальным новостям.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NewsResponse {
+    /// Признак, есть ли еще новости.
+    #[prost(bool, tag = "1")]
+    pub has_next: bool,
+    /// Следующий курсор.
+    #[prost(int64, optional, tag = "2")]
+    pub next_cursor: ::core::option::Option<i64>,
+    /// Массив новостей.
+    #[prost(message, repeated, tag = "3")]
+    pub items: ::prost::alloc::vec::Vec<NewsItem>,
+}
+/// Объект новости.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NewsItem {
+    /// Уникальный идентификатор новости.
+    #[prost(int64, tag = "1")]
+    pub id: i64,
+    /// Источник новости.
+    #[prost(string, tag = "2")]
+    pub source: ::prost::alloc::string::String,
+    /// Заголовок новости.
+    #[prost(string, tag = "3")]
+    pub title: ::prost::alloc::string::String,
+    /// Содержание новости.
+    #[prost(string, tag = "4")]
+    pub content: ::prost::alloc::string::String,
+    /// Обобщенная информация.
+    #[prost(string, optional, tag = "5")]
+    pub summary: ::core::option::Option<::prost::alloc::string::String>,
+    /// Табличные данные.
+    #[prost(message, repeated, tag = "6")]
+    pub tables: ::prost::alloc::vec::Vec<Table>,
+    /// Инструменты из новости.
+    #[prost(message, repeated, tag = "7")]
+    pub instrument_id: ::prost::alloc::vec::Vec<NewsInstrument>,
+    /// Флаг, указывающий, важная ли новость.
+    #[prost(bool, tag = "8")]
+    pub priority: bool,
+    /// Время новости.
+    #[prost(message, optional, tag = "9")]
+    pub ts: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Объект табличных данных.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Table {
+    /// Таблица.
+    #[prost(string, tag = "1")]
+    pub table: ::prost::alloc::string::String,
+}
+/// Объект инструмента из новости.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct NewsInstrument {
+    /// Информация по инструменту.
+    #[prost(message, optional, tag = "1")]
+    pub instrument: ::core::option::Option<NewsInstrumentInfo>,
+}
+/// Объект информации по инструменту из новости.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct NewsInstrumentInfo {
+    /// Уникальный идентификатор инструмента.
+    #[prost(string, tag = "1")]
+    pub instrument_uid: ::prost::alloc::string::String,
+    /// Тикер инструмента.
+    #[prost(string, tag = "2")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "3")]
+    pub class_code: ::prost::alloc::string::String,
+}
 /// Объект передачи информации об облигации.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Bond {
@@ -1158,7 +1239,7 @@ pub struct Bond {
     /// Тип облигации.
     #[prost(enumeration = "BondType", tag = "65")]
     pub bond_type: i32,
-    /// Дата погашения облигации.
+    /// Дата оферты.
     #[prost(message, optional, tag = "69")]
     pub call_date: ::core::option::Option<::prost_types::Timestamp>,
     /// Ставка риска в лонг с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](<https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5>).
@@ -2977,7 +3058,7 @@ pub struct IndicativesResponse {
     pub instruments: ::prost::alloc::vec::Vec<IndicativeResponse>,
 }
 /// Индикатив
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IndicativeResponse {
     /// FIGI-идентификатор инструмента.
     #[prost(string, tag = "1")]
@@ -3009,6 +3090,19 @@ pub struct IndicativeResponse {
     /// Признак доступности для продажи.
     #[prost(bool, tag = "405")]
     pub sell_available_flag: bool,
+    /// Состав индекса.
+    #[prost(message, repeated, tag = "406")]
+    pub index_composition: ::prost::alloc::vec::Vec<IndexInstrument>,
+}
+/// Инструмент в составе индекса
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct IndexInstrument {
+    /// Идентификатор инструмента.
+    #[prost(string, tag = "1")]
+    pub uid: ::prost::alloc::string::String,
+    /// Вес инструмента в составе индекса в %.
+    #[prost(message, optional, tag = "2")]
+    pub weight: ::core::option::Option<Quotation>,
 }
 /// Данные о стране.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -4941,7 +5035,7 @@ pub mod instruments_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// DfaBy — получить цифровой актив по ее идентификатору
+        /// DfaBy — получить цифровой актив по его идентификатору
         pub async fn dfa_by(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
@@ -5703,6 +5797,33 @@ pub mod instruments_service_client {
                     GrpcMethod::new(
                         "tinkoff.public.invest.api.contract.v1.InstrumentsService",
                         "StructuredNotes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// News — получение актуальных новостей
+        pub async fn news(
+            &mut self,
+            request: impl tonic::IntoRequest<super::NewsRequest>,
+        ) -> std::result::Result<tonic::Response<super::NewsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.InstrumentsService/News",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                        "News",
                     ),
                 );
             self.inner.unary(req, path, codec).await
@@ -8348,6 +8469,9 @@ pub struct PortfolioPosition {
     /// Класс-код (секция торгов).
     #[prost(string, tag = "33")]
     pub class_code: ::prost::alloc::string::String,
+    /// Вариационная маржа (расчетная).
+    #[prost(message, optional, tag = "34")]
+    pub var_margin_settled: ::core::option::Option<MoneyValue>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct VirtualPortfolioPosition {
@@ -9367,6 +9491,8 @@ pub enum OperationType {
     DfaRedemption = 68,
     /// отмена заявки на первичное размещение по ЦФА;
     PrimaryOrder = 69,
+    /// Списание фандинга.
+    Funding = 70,
 }
 impl OperationType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -9444,6 +9570,7 @@ impl OperationType {
             Self::Other => "OPERATION_TYPE_OTHER",
             Self::DfaRedemption => "OPERATION_TYPE_DFA_REDEMPTION",
             Self::PrimaryOrder => "OPERATION_TYPE_PRIMARY_ORDER",
+            Self::Funding => "OPERATION_TYPE_FUNDING",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -9524,6 +9651,7 @@ impl OperationType {
             "OPERATION_TYPE_OTHER" => Some(Self::Other),
             "OPERATION_TYPE_DFA_REDEMPTION" => Some(Self::DfaRedemption),
             "OPERATION_TYPE_PRIMARY_ORDER" => Some(Self::PrimaryOrder),
+            "OPERATION_TYPE_FUNDING" => Some(Self::Funding),
             _ => None,
         }
     }
@@ -9764,7 +9892,7 @@ pub mod operations_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// GetOperations — список операций по счету
+        /// Deprecated GetOperations — список операций по счету
         /// При работе с методом учитывайте [особенности взаимодействия](/invest/services/operations/operations_problems).
         pub async fn get_operations(
             &mut self,
@@ -10160,6 +10288,687 @@ pub mod operations_stream_service_client {
                     ),
                 );
             self.inner.server_streaming(req, path, codec).await
+        }
+    }
+}
+/// Запрос выставления стоп-заявки.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PostStopOrderRequest {
+    /// Deprecated FIGI-идентификатор инструмента. Используйте `instrument_id`.
+    #[deprecated]
+    #[prost(string, optional, tag = "1")]
+    pub figi: ::core::option::Option<::prost::alloc::string::String>,
+    /// Количество лотов.
+    #[prost(int64, tag = "2")]
+    pub quantity: i64,
+    /// Цена за 1 инструмент биржевой заявки, которая будет выставлена при срабатывании по достижению `stop_price`. Чтобы получить стоимость лота, нужно умножить на лотность инструмента.
+    #[prost(message, optional, tag = "3")]
+    pub price: ::core::option::Option<Quotation>,
+    /// Стоп-цена заявки за 1 инструмент. При достижении стоп-цены происходит активация стоп-заявки, в результате чего выставляется биржевая заявка. Чтобы получить стоимость лота, нужно умножить на лотность инструмента.
+    #[prost(message, optional, tag = "4")]
+    pub stop_price: ::core::option::Option<Quotation>,
+    /// Направление операции.
+    #[prost(enumeration = "StopOrderDirection", tag = "5")]
+    pub direction: i32,
+    /// Номер счета.
+    #[prost(string, tag = "6")]
+    pub account_id: ::prost::alloc::string::String,
+    /// Тип экспирации заявки.
+    #[prost(enumeration = "StopOrderExpirationType", tag = "7")]
+    pub expiration_type: i32,
+    /// Тип заявки.
+    #[prost(enumeration = "StopOrderType", tag = "8")]
+    pub stop_order_type: i32,
+    /// Дата и время окончания действия стоп-заявки по UTC. Для `ExpirationType = GoodTillDate` заполнение обязательно, для `GoodTillCancel` игнорируется.
+    #[prost(message, optional, tag = "9")]
+    pub expire_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
+    #[prost(string, tag = "10")]
+    pub instrument_id: ::prost::alloc::string::String,
+    /// Тип дочерней биржевой заявки.
+    #[prost(enumeration = "ExchangeOrderType", tag = "11")]
+    pub exchange_order_type: i32,
+    /// Подтип стоп-заявки — `TakeProfit`.
+    #[prost(enumeration = "TakeProfitType", tag = "12")]
+    pub take_profit_type: i32,
+    /// Массив с параметрами трейлинг-стопа.
+    #[prost(message, optional, tag = "13")]
+    pub trailing_data: ::core::option::Option<post_stop_order_request::TrailingData>,
+    /// Тип цены.
+    #[prost(enumeration = "PriceType", tag = "14")]
+    pub price_type: i32,
+    /// Идентификатор запроса выставления поручения для целей идемпотентности в формате `UID`. Максимальная длина — 36 символов.
+    #[prost(string, tag = "15")]
+    pub order_id: ::prost::alloc::string::String,
+    /// Согласие на выставление заявки, которая может привести к непокрытой позиции, по умолчанию false.
+    #[prost(bool, tag = "16")]
+    pub confirm_margin_trade: bool,
+    /// Признак необходимости моментальной активации, используется только для трейлинг-стопа.
+    #[prost(bool, optional, tag = "17")]
+    pub instant_execution: ::core::option::Option<bool>,
+}
+/// Nested message and enum types in `PostStopOrderRequest`.
+pub mod post_stop_order_request {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct TrailingData {
+        /// Отступ.
+        #[prost(message, optional, tag = "1")]
+        pub indent: ::core::option::Option<super::Quotation>,
+        /// Тип величины отступа.
+        #[prost(enumeration = "super::TrailingValueType", tag = "2")]
+        pub indent_type: i32,
+        /// Размер защитного спреда.
+        #[prost(message, optional, tag = "3")]
+        pub spread: ::core::option::Option<super::Quotation>,
+        /// Тип величины защитного спреда.
+        #[prost(enumeration = "super::TrailingValueType", tag = "4")]
+        pub spread_type: i32,
+    }
+}
+/// Результат выставления стоп-заявки.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PostStopOrderResponse {
+    /// Уникальный идентификатор стоп-заявки.
+    #[prost(string, tag = "1")]
+    pub stop_order_id: ::prost::alloc::string::String,
+    /// Идентификатор ключа идемпотентности, переданный клиентом, в формате `UID`. Максимальная длина 36 — символов.
+    #[prost(string, tag = "2")]
+    pub order_request_id: ::prost::alloc::string::String,
+    /// Метадата.
+    #[prost(message, optional, tag = "254")]
+    pub response_metadata: ::core::option::Option<ResponseMetadata>,
+}
+/// Запрос получения списка стоп-заявок.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetStopOrdersRequest {
+    /// Идентификатор счета клиента.
+    #[prost(string, tag = "1")]
+    pub account_id: ::prost::alloc::string::String,
+    /// Статус заявок.
+    #[prost(enumeration = "StopOrderStatusOption", tag = "2")]
+    pub status: i32,
+    /// Левая граница.
+    #[prost(message, optional, tag = "3")]
+    pub from: ::core::option::Option<::prost_types::Timestamp>,
+    /// Правая граница.
+    #[prost(message, optional, tag = "4")]
+    pub to: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Список стоп-заявок.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetStopOrdersResponse {
+    /// Массив стоп-заявок по счету.
+    #[prost(message, repeated, tag = "1")]
+    pub stop_orders: ::prost::alloc::vec::Vec<StopOrder>,
+}
+/// Запрос отмены выставленной стоп-заявки.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CancelStopOrderRequest {
+    /// Идентификатор счета клиента.
+    #[prost(string, tag = "1")]
+    pub account_id: ::prost::alloc::string::String,
+    /// Уникальный идентификатор стоп-заявки.
+    #[prost(string, tag = "2")]
+    pub stop_order_id: ::prost::alloc::string::String,
+}
+/// Результат отмены выставленной стоп-заявки.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CancelStopOrderResponse {
+    /// Время отмены заявки по UTC.
+    #[prost(message, optional, tag = "1")]
+    pub time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Информация о стоп-заявке.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct StopOrder {
+    /// Уникальный идентификатор стоп-заявки.
+    #[prost(string, tag = "1")]
+    pub stop_order_id: ::prost::alloc::string::String,
+    /// Запрошено лотов.
+    #[prost(int64, tag = "2")]
+    pub lots_requested: i64,
+    /// FIGI-идентификатор инструмента.
+    #[prost(string, tag = "3")]
+    pub figi: ::prost::alloc::string::String,
+    /// Направление операции.
+    #[prost(enumeration = "StopOrderDirection", tag = "4")]
+    pub direction: i32,
+    /// Валюта стоп-заявки.
+    #[prost(string, tag = "5")]
+    pub currency: ::prost::alloc::string::String,
+    /// Тип стоп-заявки.
+    #[prost(enumeration = "StopOrderType", tag = "6")]
+    pub order_type: i32,
+    /// Дата и время выставления заявки по UTC.
+    #[prost(message, optional, tag = "7")]
+    pub create_date: ::core::option::Option<::prost_types::Timestamp>,
+    /// Дата и время конвертации стоп-заявки в биржевую по UTC.
+    #[prost(message, optional, tag = "8")]
+    pub activation_date_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Дата и время снятия заявки по UTC.
+    #[prost(message, optional, tag = "9")]
+    pub expiration_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Цена заявки за 1 инструмент. Чтобы получить стоимость лота, нужно умножить на лотность инструмента.
+    #[prost(message, optional, tag = "10")]
+    pub price: ::core::option::Option<MoneyValue>,
+    /// Цена активации стоп-заявки за 1 инструмент. Чтобы получить стоимость лота, нужно умножить на лотность инструмента.
+    #[prost(message, optional, tag = "11")]
+    pub stop_price: ::core::option::Option<MoneyValue>,
+    /// `instrument_uid`-идентификатор инструмента.
+    #[prost(string, tag = "12")]
+    pub instrument_uid: ::prost::alloc::string::String,
+    /// Подтип стоп-заявки — `TakeProfit`.
+    #[prost(enumeration = "TakeProfitType", tag = "13")]
+    pub take_profit_type: i32,
+    /// Параметры трейлинг-стопа.
+    #[prost(message, optional, tag = "14")]
+    pub trailing_data: ::core::option::Option<stop_order::TrailingData>,
+    /// Статус заявки.
+    #[prost(enumeration = "StopOrderStatusOption", tag = "15")]
+    pub status: i32,
+    /// Тип дочерней биржевой заявки для тейкпрофита.
+    #[prost(enumeration = "ExchangeOrderType", tag = "16")]
+    pub exchange_order_type: i32,
+    /// Идентификатор биржевой заявки.
+    #[prost(string, optional, tag = "17")]
+    pub exchange_order_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Тикер инструмента.
+    #[prost(string, tag = "18")]
+    pub ticker: ::prost::alloc::string::String,
+    /// Класс-код (секция торгов).
+    #[prost(string, tag = "19")]
+    pub class_code: ::prost::alloc::string::String,
+    /// Признак необходимости моментальной активации, используется только для трейлинг-стопа.
+    #[prost(bool, tag = "20")]
+    pub instant_execution: bool,
+}
+/// Nested message and enum types in `StopOrder`.
+pub mod stop_order {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct TrailingData {
+        /// Отступ.
+        #[prost(message, optional, tag = "1")]
+        pub indent: ::core::option::Option<super::Quotation>,
+        /// Тип величины отступа.
+        #[prost(enumeration = "super::TrailingValueType", tag = "2")]
+        pub indent_type: i32,
+        /// Размер защитного спреда.
+        #[prost(message, optional, tag = "3")]
+        pub spread: ::core::option::Option<super::Quotation>,
+        /// Тип величины защитного спреда.
+        #[prost(enumeration = "super::TrailingValueType", tag = "4")]
+        pub spread_type: i32,
+        /// Статус трейлинг-стопа.
+        #[prost(enumeration = "super::TrailingStopStatus", tag = "5")]
+        pub status: i32,
+        /// Цена исполнения.
+        #[prost(message, optional, tag = "7")]
+        pub price: ::core::option::Option<super::Quotation>,
+        /// Локальный экстремум.
+        #[prost(message, optional, tag = "8")]
+        pub extr: ::core::option::Option<super::Quotation>,
+    }
+}
+/// Направление сделки стоп-заявки.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum StopOrderDirection {
+    /// Значение не указано.
+    Unspecified = 0,
+    /// Покупка.
+    Buy = 1,
+    /// Продажа.
+    Sell = 2,
+}
+impl StopOrderDirection {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "STOP_ORDER_DIRECTION_UNSPECIFIED",
+            Self::Buy => "STOP_ORDER_DIRECTION_BUY",
+            Self::Sell => "STOP_ORDER_DIRECTION_SELL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "STOP_ORDER_DIRECTION_UNSPECIFIED" => Some(Self::Unspecified),
+            "STOP_ORDER_DIRECTION_BUY" => Some(Self::Buy),
+            "STOP_ORDER_DIRECTION_SELL" => Some(Self::Sell),
+            _ => None,
+        }
+    }
+}
+/// Тип экспирации стоп-заявке.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum StopOrderExpirationType {
+    /// Значение не указано.
+    Unspecified = 0,
+    /// Действительно до отмены.
+    GoodTillCancel = 1,
+    /// Действительно до даты снятия.
+    GoodTillDate = 2,
+}
+impl StopOrderExpirationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "STOP_ORDER_EXPIRATION_TYPE_UNSPECIFIED",
+            Self::GoodTillCancel => "STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_CANCEL",
+            Self::GoodTillDate => "STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_DATE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "STOP_ORDER_EXPIRATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_CANCEL" => Some(Self::GoodTillCancel),
+            "STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_DATE" => Some(Self::GoodTillDate),
+            _ => None,
+        }
+    }
+}
+/// Тип стоп-заявки.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum StopOrderType {
+    /// Значение не указано.
+    Unspecified = 0,
+    /// `Take-profit`-заявка.
+    TakeProfit = 1,
+    /// `Stop-loss`-заявка.
+    StopLoss = 2,
+    /// `Stop-limit`-заявка.
+    StopLimit = 3,
+}
+impl StopOrderType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "STOP_ORDER_TYPE_UNSPECIFIED",
+            Self::TakeProfit => "STOP_ORDER_TYPE_TAKE_PROFIT",
+            Self::StopLoss => "STOP_ORDER_TYPE_STOP_LOSS",
+            Self::StopLimit => "STOP_ORDER_TYPE_STOP_LIMIT",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "STOP_ORDER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "STOP_ORDER_TYPE_TAKE_PROFIT" => Some(Self::TakeProfit),
+            "STOP_ORDER_TYPE_STOP_LOSS" => Some(Self::StopLoss),
+            "STOP_ORDER_TYPE_STOP_LIMIT" => Some(Self::StopLimit),
+            _ => None,
+        }
+    }
+}
+/// Статус стоп-заяки.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum StopOrderStatusOption {
+    /// Значение не указано.
+    StopOrderStatusUnspecified = 0,
+    /// Все заявки.
+    StopOrderStatusAll = 1,
+    /// Активные заявки.
+    StopOrderStatusActive = 2,
+    /// Исполненные заявки.
+    StopOrderStatusExecuted = 3,
+    /// Отмененные заявки.
+    StopOrderStatusCanceled = 4,
+    /// Истекшие заявки.
+    StopOrderStatusExpired = 5,
+}
+impl StopOrderStatusOption {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::StopOrderStatusUnspecified => "STOP_ORDER_STATUS_UNSPECIFIED",
+            Self::StopOrderStatusAll => "STOP_ORDER_STATUS_ALL",
+            Self::StopOrderStatusActive => "STOP_ORDER_STATUS_ACTIVE",
+            Self::StopOrderStatusExecuted => "STOP_ORDER_STATUS_EXECUTED",
+            Self::StopOrderStatusCanceled => "STOP_ORDER_STATUS_CANCELED",
+            Self::StopOrderStatusExpired => "STOP_ORDER_STATUS_EXPIRED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "STOP_ORDER_STATUS_UNSPECIFIED" => Some(Self::StopOrderStatusUnspecified),
+            "STOP_ORDER_STATUS_ALL" => Some(Self::StopOrderStatusAll),
+            "STOP_ORDER_STATUS_ACTIVE" => Some(Self::StopOrderStatusActive),
+            "STOP_ORDER_STATUS_EXECUTED" => Some(Self::StopOrderStatusExecuted),
+            "STOP_ORDER_STATUS_CANCELED" => Some(Self::StopOrderStatusCanceled),
+            "STOP_ORDER_STATUS_EXPIRED" => Some(Self::StopOrderStatusExpired),
+            _ => None,
+        }
+    }
+}
+/// Тип выставляемой заявки.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ExchangeOrderType {
+    /// Значение не указано.
+    Unspecified = 0,
+    /// Заявка по рыночной цене.
+    Market = 1,
+    /// Лимитная заявка.
+    Limit = 2,
+}
+impl ExchangeOrderType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "EXCHANGE_ORDER_TYPE_UNSPECIFIED",
+            Self::Market => "EXCHANGE_ORDER_TYPE_MARKET",
+            Self::Limit => "EXCHANGE_ORDER_TYPE_LIMIT",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "EXCHANGE_ORDER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "EXCHANGE_ORDER_TYPE_MARKET" => Some(Self::Market),
+            "EXCHANGE_ORDER_TYPE_LIMIT" => Some(Self::Limit),
+            _ => None,
+        }
+    }
+}
+/// Тип TakeProfit-заявки.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TakeProfitType {
+    /// Значение не указано.
+    Unspecified = 0,
+    /// Обычная заявка, значение по умолчанию.
+    Regular = 1,
+    /// Трейлинг-стоп.
+    Trailing = 2,
+}
+impl TakeProfitType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "TAKE_PROFIT_TYPE_UNSPECIFIED",
+            Self::Regular => "TAKE_PROFIT_TYPE_REGULAR",
+            Self::Trailing => "TAKE_PROFIT_TYPE_TRAILING",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TAKE_PROFIT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "TAKE_PROFIT_TYPE_REGULAR" => Some(Self::Regular),
+            "TAKE_PROFIT_TYPE_TRAILING" => Some(Self::Trailing),
+            _ => None,
+        }
+    }
+}
+/// Тип параметров значений трейлинг-стопа.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TrailingValueType {
+    /// Значение не указано.
+    TrailingValueUnspecified = 0,
+    /// Абсолютное значение в единицах цены.
+    TrailingValueAbsolute = 1,
+    /// Относительное значение в процентах.
+    TrailingValueRelative = 2,
+}
+impl TrailingValueType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::TrailingValueUnspecified => "TRAILING_VALUE_UNSPECIFIED",
+            Self::TrailingValueAbsolute => "TRAILING_VALUE_ABSOLUTE",
+            Self::TrailingValueRelative => "TRAILING_VALUE_RELATIVE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TRAILING_VALUE_UNSPECIFIED" => Some(Self::TrailingValueUnspecified),
+            "TRAILING_VALUE_ABSOLUTE" => Some(Self::TrailingValueAbsolute),
+            "TRAILING_VALUE_RELATIVE" => Some(Self::TrailingValueRelative),
+            _ => None,
+        }
+    }
+}
+/// Статус трейлинг-стопа.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TrailingStopStatus {
+    /// Значение не указано.
+    TrailingStopUnspecified = 0,
+    /// Активный.
+    TrailingStopActive = 1,
+    /// Активированный.
+    TrailingStopActivated = 2,
+}
+impl TrailingStopStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::TrailingStopUnspecified => "TRAILING_STOP_UNSPECIFIED",
+            Self::TrailingStopActive => "TRAILING_STOP_ACTIVE",
+            Self::TrailingStopActivated => "TRAILING_STOP_ACTIVATED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TRAILING_STOP_UNSPECIFIED" => Some(Self::TrailingStopUnspecified),
+            "TRAILING_STOP_ACTIVE" => Some(Self::TrailingStopActive),
+            "TRAILING_STOP_ACTIVATED" => Some(Self::TrailingStopActivated),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod stop_orders_service_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct StopOrdersServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl StopOrdersServiceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> StopOrdersServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> StopOrdersServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            StopOrdersServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// PostStopOrder — выставить стоп-заявку
+        pub async fn post_stop_order(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PostStopOrderRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::PostStopOrderResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.StopOrdersService/PostStopOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.StopOrdersService",
+                        "PostStopOrder",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// GetStopOrders — получить список стоп-заявок по счету
+        pub async fn get_stop_orders(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetStopOrdersRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetStopOrdersResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.StopOrdersService/GetStopOrders",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.StopOrdersService",
+                        "GetStopOrders",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// CancelStopOrder — отменить стоп-заявку
+        pub async fn cancel_stop_order(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CancelStopOrderRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::CancelStopOrderResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tinkoff.public.invest.api.contract.v1.StopOrdersService/CancelStopOrder",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "tinkoff.public.invest.api.contract.v1.StopOrdersService",
+                        "CancelStopOrder",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -10735,7 +11544,7 @@ pub struct SubscriptionResponse {
 /// Информация по заявкам
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OrderStateStreamResponse {
-    #[prost(oneof = "order_state_stream_response::Payload", tags = "1, 2, 3")]
+    #[prost(oneof = "order_state_stream_response::Payload", tags = "1, 2, 3, 4")]
     pub payload: ::core::option::Option<order_state_stream_response::Payload>,
 }
 /// Nested message and enum types in `OrderStateStreamResponse`.
@@ -10830,6 +11639,43 @@ pub mod order_state_stream_response {
         /// UID идентификатор инструмента.
         #[prost(string, tag = "41")]
         pub instrument_uid: ::prost::alloc::string::String,
+    }
+    /// Стоп-ордер
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+    pub struct StopOrderState {
+        /// Идентификатор стоп-заявки.
+        #[prost(string, tag = "1")]
+        pub stop_order_id: ::prost::alloc::string::String,
+        /// Номер счёта.
+        #[prost(string, tag = "2")]
+        pub account_id: ::prost::alloc::string::String,
+        /// Дата создания заявки.
+        #[prost(message, optional, tag = "3")]
+        pub created_at: ::core::option::Option<::prost_types::Timestamp>,
+        /// Направление заявки.
+        #[prost(enumeration = "super::OrderDirection", tag = "4")]
+        pub direction: i32,
+        /// Цена заявки.
+        #[prost(message, optional, tag = "5")]
+        pub price: ::core::option::Option<super::MoneyValue>,
+        /// Цена активации стоп-заявки.
+        #[prost(message, optional, tag = "6")]
+        pub stop_price: ::core::option::Option<super::MoneyValue>,
+        /// Тип дочерней биржевой заявки.
+        #[prost(enumeration = "super::OrderType", tag = "7")]
+        pub order_type: i32,
+        /// UID идентификатор инструмента.
+        #[prost(string, tag = "8")]
+        pub instrument_uid: ::prost::alloc::string::String,
+        /// Тикер инструмента.
+        #[prost(string, tag = "9")]
+        pub ticker: ::prost::alloc::string::String,
+        /// Класс-код.
+        #[prost(string, tag = "10")]
+        pub class_code: ::prost::alloc::string::String,
+        /// Состояние заявки.
+        #[prost(enumeration = "super::StopOrderStatusOption", tag = "11")]
+        pub status: i32,
     }
     /// Маркер
     #[derive(
@@ -10977,6 +11823,9 @@ pub mod order_state_stream_response {
         /// Ответ на запрос на подписку.
         #[prost(message, tag = "3")]
         Subscription(super::SubscriptionResponse),
+        /// Стоп-ордер.
+        #[prost(message, tag = "4")]
+        StopOrderState(StopOrderState),
     }
 }
 /// Направление операции.
@@ -11654,687 +12503,6 @@ pub mod orders_service_client {
                     GrpcMethod::new(
                         "tinkoff.public.invest.api.contract.v1.OrdersService",
                         "GetOrderPrice",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-    }
-}
-/// Запрос выставления стоп-заявки.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PostStopOrderRequest {
-    /// Deprecated FIGI-идентификатор инструмента. Используйте `instrument_id`.
-    #[deprecated]
-    #[prost(string, optional, tag = "1")]
-    pub figi: ::core::option::Option<::prost::alloc::string::String>,
-    /// Количество лотов.
-    #[prost(int64, tag = "2")]
-    pub quantity: i64,
-    /// Цена за 1 инструмент биржевой заявки, которая будет выставлена при срабатывании по достижению `stop_price`. Чтобы получить стоимость лота, нужно умножить на лотность инструмента.
-    #[prost(message, optional, tag = "3")]
-    pub price: ::core::option::Option<Quotation>,
-    /// Стоп-цена заявки за 1 инструмент. При достижении стоп-цены происходит активация стоп-заявки, в результате чего выставляется биржевая заявка. Чтобы получить стоимость лота, нужно умножить на лотность инструмента.
-    #[prost(message, optional, tag = "4")]
-    pub stop_price: ::core::option::Option<Quotation>,
-    /// Направление операции.
-    #[prost(enumeration = "StopOrderDirection", tag = "5")]
-    pub direction: i32,
-    /// Номер счета.
-    #[prost(string, tag = "6")]
-    pub account_id: ::prost::alloc::string::String,
-    /// Тип экспирации заявки.
-    #[prost(enumeration = "StopOrderExpirationType", tag = "7")]
-    pub expiration_type: i32,
-    /// Тип заявки.
-    #[prost(enumeration = "StopOrderType", tag = "8")]
-    pub stop_order_type: i32,
-    /// Дата и время окончания действия стоп-заявки по UTC. Для `ExpirationType = GoodTillDate` заполнение обязательно, для `GoodTillCancel` игнорируется.
-    #[prost(message, optional, tag = "9")]
-    pub expire_date: ::core::option::Option<::prost_types::Timestamp>,
-    /// Идентификатор инструмента. Принимает значение `figi`, `instrument_uid` или `ticker + '_' + class_code`.
-    #[prost(string, tag = "10")]
-    pub instrument_id: ::prost::alloc::string::String,
-    /// Тип дочерней биржевой заявки.
-    #[prost(enumeration = "ExchangeOrderType", tag = "11")]
-    pub exchange_order_type: i32,
-    /// Подтип стоп-заявки — `TakeProfit`.
-    #[prost(enumeration = "TakeProfitType", tag = "12")]
-    pub take_profit_type: i32,
-    /// Массив с параметрами трейлинг-стопа.
-    #[prost(message, optional, tag = "13")]
-    pub trailing_data: ::core::option::Option<post_stop_order_request::TrailingData>,
-    /// Тип цены.
-    #[prost(enumeration = "PriceType", tag = "14")]
-    pub price_type: i32,
-    /// Идентификатор запроса выставления поручения для целей идемпотентности в формате `UID`. Максимальная длина — 36 символов.
-    #[prost(string, tag = "15")]
-    pub order_id: ::prost::alloc::string::String,
-    /// Согласие на выставление заявки, которая может привести к непокрытой позиции, по умолчанию false.
-    #[prost(bool, tag = "16")]
-    pub confirm_margin_trade: bool,
-    /// Признак необходимости моментальной активации, используется только для трейлинг-стопа.
-    #[prost(bool, optional, tag = "17")]
-    pub instant_execution: ::core::option::Option<bool>,
-}
-/// Nested message and enum types in `PostStopOrderRequest`.
-pub mod post_stop_order_request {
-    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-    pub struct TrailingData {
-        /// Отступ.
-        #[prost(message, optional, tag = "1")]
-        pub indent: ::core::option::Option<super::Quotation>,
-        /// Тип величины отступа.
-        #[prost(enumeration = "super::TrailingValueType", tag = "2")]
-        pub indent_type: i32,
-        /// Размер защитного спреда.
-        #[prost(message, optional, tag = "3")]
-        pub spread: ::core::option::Option<super::Quotation>,
-        /// Тип величины защитного спреда.
-        #[prost(enumeration = "super::TrailingValueType", tag = "4")]
-        pub spread_type: i32,
-    }
-}
-/// Результат выставления стоп-заявки.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct PostStopOrderResponse {
-    /// Уникальный идентификатор стоп-заявки.
-    #[prost(string, tag = "1")]
-    pub stop_order_id: ::prost::alloc::string::String,
-    /// Идентификатор ключа идемпотентности, переданный клиентом, в формате `UID`. Максимальная длина 36 — символов.
-    #[prost(string, tag = "2")]
-    pub order_request_id: ::prost::alloc::string::String,
-    /// Метадата.
-    #[prost(message, optional, tag = "254")]
-    pub response_metadata: ::core::option::Option<ResponseMetadata>,
-}
-/// Запрос получения списка активных стоп-заявок.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct GetStopOrdersRequest {
-    /// Идентификатор счета клиента.
-    #[prost(string, tag = "1")]
-    pub account_id: ::prost::alloc::string::String,
-    /// Статус заявок.
-    #[prost(enumeration = "StopOrderStatusOption", tag = "2")]
-    pub status: i32,
-    /// Левая граница.
-    #[prost(message, optional, tag = "3")]
-    pub from: ::core::option::Option<::prost_types::Timestamp>,
-    /// Правая граница.
-    #[prost(message, optional, tag = "4")]
-    pub to: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Список активных стоп-заявок.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetStopOrdersResponse {
-    /// Массив стоп-заявок по счету.
-    #[prost(message, repeated, tag = "1")]
-    pub stop_orders: ::prost::alloc::vec::Vec<StopOrder>,
-}
-/// Запрос отмены выставленной стоп-заявки.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CancelStopOrderRequest {
-    /// Идентификатор счета клиента.
-    #[prost(string, tag = "1")]
-    pub account_id: ::prost::alloc::string::String,
-    /// Уникальный идентификатор стоп-заявки.
-    #[prost(string, tag = "2")]
-    pub stop_order_id: ::prost::alloc::string::String,
-}
-/// Результат отмены выставленной стоп-заявки.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct CancelStopOrderResponse {
-    /// Время отмены заявки по UTC.
-    #[prost(message, optional, tag = "1")]
-    pub time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Информация о стоп-заявке.
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct StopOrder {
-    /// Уникальный идентификатор стоп-заявки.
-    #[prost(string, tag = "1")]
-    pub stop_order_id: ::prost::alloc::string::String,
-    /// Запрошено лотов.
-    #[prost(int64, tag = "2")]
-    pub lots_requested: i64,
-    /// FIGI-идентификатор инструмента.
-    #[prost(string, tag = "3")]
-    pub figi: ::prost::alloc::string::String,
-    /// Направление операции.
-    #[prost(enumeration = "StopOrderDirection", tag = "4")]
-    pub direction: i32,
-    /// Валюта стоп-заявки.
-    #[prost(string, tag = "5")]
-    pub currency: ::prost::alloc::string::String,
-    /// Тип стоп-заявки.
-    #[prost(enumeration = "StopOrderType", tag = "6")]
-    pub order_type: i32,
-    /// Дата и время выставления заявки по UTC.
-    #[prost(message, optional, tag = "7")]
-    pub create_date: ::core::option::Option<::prost_types::Timestamp>,
-    /// Дата и время конвертации стоп-заявки в биржевую по UTC.
-    #[prost(message, optional, tag = "8")]
-    pub activation_date_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Дата и время снятия заявки по UTC.
-    #[prost(message, optional, tag = "9")]
-    pub expiration_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Цена заявки за 1 инструмент. Чтобы получить стоимость лота, нужно умножить на лотность инструмента.
-    #[prost(message, optional, tag = "10")]
-    pub price: ::core::option::Option<MoneyValue>,
-    /// Цена активации стоп-заявки за 1 инструмент. Чтобы получить стоимость лота, нужно умножить на лотность инструмента.
-    #[prost(message, optional, tag = "11")]
-    pub stop_price: ::core::option::Option<MoneyValue>,
-    /// `instrument_uid`-идентификатор инструмента.
-    #[prost(string, tag = "12")]
-    pub instrument_uid: ::prost::alloc::string::String,
-    /// Подтип стоп-заявки — `TakeProfit`.
-    #[prost(enumeration = "TakeProfitType", tag = "13")]
-    pub take_profit_type: i32,
-    /// Параметры трейлинг-стопа.
-    #[prost(message, optional, tag = "14")]
-    pub trailing_data: ::core::option::Option<stop_order::TrailingData>,
-    /// Статус заявки.
-    #[prost(enumeration = "StopOrderStatusOption", tag = "15")]
-    pub status: i32,
-    /// Тип дочерней биржевой заявки для тейкпрофита.
-    #[prost(enumeration = "ExchangeOrderType", tag = "16")]
-    pub exchange_order_type: i32,
-    /// Идентификатор биржевой заявки.
-    #[prost(string, optional, tag = "17")]
-    pub exchange_order_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Тикер инструмента.
-    #[prost(string, tag = "18")]
-    pub ticker: ::prost::alloc::string::String,
-    /// Класс-код (секция торгов).
-    #[prost(string, tag = "19")]
-    pub class_code: ::prost::alloc::string::String,
-    /// Признак необходимости моментальной активации, используется только для трейлинг-стопа.
-    #[prost(bool, tag = "20")]
-    pub instant_execution: bool,
-}
-/// Nested message and enum types in `StopOrder`.
-pub mod stop_order {
-    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-    pub struct TrailingData {
-        /// Отступ.
-        #[prost(message, optional, tag = "1")]
-        pub indent: ::core::option::Option<super::Quotation>,
-        /// Тип величины отступа.
-        #[prost(enumeration = "super::TrailingValueType", tag = "2")]
-        pub indent_type: i32,
-        /// Размер защитного спреда.
-        #[prost(message, optional, tag = "3")]
-        pub spread: ::core::option::Option<super::Quotation>,
-        /// Тип величины защитного спреда.
-        #[prost(enumeration = "super::TrailingValueType", tag = "4")]
-        pub spread_type: i32,
-        /// Статус трейлинг-стопа.
-        #[prost(enumeration = "super::TrailingStopStatus", tag = "5")]
-        pub status: i32,
-        /// Цена исполнения.
-        #[prost(message, optional, tag = "7")]
-        pub price: ::core::option::Option<super::Quotation>,
-        /// Локальный экстремум.
-        #[prost(message, optional, tag = "8")]
-        pub extr: ::core::option::Option<super::Quotation>,
-    }
-}
-/// Направление сделки стоп-заявки.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum StopOrderDirection {
-    /// Значение не указано.
-    Unspecified = 0,
-    /// Покупка.
-    Buy = 1,
-    /// Продажа.
-    Sell = 2,
-}
-impl StopOrderDirection {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "STOP_ORDER_DIRECTION_UNSPECIFIED",
-            Self::Buy => "STOP_ORDER_DIRECTION_BUY",
-            Self::Sell => "STOP_ORDER_DIRECTION_SELL",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "STOP_ORDER_DIRECTION_UNSPECIFIED" => Some(Self::Unspecified),
-            "STOP_ORDER_DIRECTION_BUY" => Some(Self::Buy),
-            "STOP_ORDER_DIRECTION_SELL" => Some(Self::Sell),
-            _ => None,
-        }
-    }
-}
-/// Тип экспирации стоп-заявке.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum StopOrderExpirationType {
-    /// Значение не указано.
-    Unspecified = 0,
-    /// Действительно до отмены.
-    GoodTillCancel = 1,
-    /// Действительно до даты снятия.
-    GoodTillDate = 2,
-}
-impl StopOrderExpirationType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "STOP_ORDER_EXPIRATION_TYPE_UNSPECIFIED",
-            Self::GoodTillCancel => "STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_CANCEL",
-            Self::GoodTillDate => "STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_DATE",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "STOP_ORDER_EXPIRATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_CANCEL" => Some(Self::GoodTillCancel),
-            "STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_DATE" => Some(Self::GoodTillDate),
-            _ => None,
-        }
-    }
-}
-/// Тип стоп-заявки.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum StopOrderType {
-    /// Значение не указано.
-    Unspecified = 0,
-    /// `Take-profit`-заявка.
-    TakeProfit = 1,
-    /// `Stop-loss`-заявка.
-    StopLoss = 2,
-    /// `Stop-limit`-заявка.
-    StopLimit = 3,
-}
-impl StopOrderType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "STOP_ORDER_TYPE_UNSPECIFIED",
-            Self::TakeProfit => "STOP_ORDER_TYPE_TAKE_PROFIT",
-            Self::StopLoss => "STOP_ORDER_TYPE_STOP_LOSS",
-            Self::StopLimit => "STOP_ORDER_TYPE_STOP_LIMIT",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "STOP_ORDER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "STOP_ORDER_TYPE_TAKE_PROFIT" => Some(Self::TakeProfit),
-            "STOP_ORDER_TYPE_STOP_LOSS" => Some(Self::StopLoss),
-            "STOP_ORDER_TYPE_STOP_LIMIT" => Some(Self::StopLimit),
-            _ => None,
-        }
-    }
-}
-/// Статус стоп-заяки.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum StopOrderStatusOption {
-    /// Значение не указано.
-    StopOrderStatusUnspecified = 0,
-    /// Все заявки.
-    StopOrderStatusAll = 1,
-    /// Активные заявки.
-    StopOrderStatusActive = 2,
-    /// Исполненные заявки.
-    StopOrderStatusExecuted = 3,
-    /// Отмененные заявки.
-    StopOrderStatusCanceled = 4,
-    /// Истекшие заявки.
-    StopOrderStatusExpired = 5,
-}
-impl StopOrderStatusOption {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::StopOrderStatusUnspecified => "STOP_ORDER_STATUS_UNSPECIFIED",
-            Self::StopOrderStatusAll => "STOP_ORDER_STATUS_ALL",
-            Self::StopOrderStatusActive => "STOP_ORDER_STATUS_ACTIVE",
-            Self::StopOrderStatusExecuted => "STOP_ORDER_STATUS_EXECUTED",
-            Self::StopOrderStatusCanceled => "STOP_ORDER_STATUS_CANCELED",
-            Self::StopOrderStatusExpired => "STOP_ORDER_STATUS_EXPIRED",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "STOP_ORDER_STATUS_UNSPECIFIED" => Some(Self::StopOrderStatusUnspecified),
-            "STOP_ORDER_STATUS_ALL" => Some(Self::StopOrderStatusAll),
-            "STOP_ORDER_STATUS_ACTIVE" => Some(Self::StopOrderStatusActive),
-            "STOP_ORDER_STATUS_EXECUTED" => Some(Self::StopOrderStatusExecuted),
-            "STOP_ORDER_STATUS_CANCELED" => Some(Self::StopOrderStatusCanceled),
-            "STOP_ORDER_STATUS_EXPIRED" => Some(Self::StopOrderStatusExpired),
-            _ => None,
-        }
-    }
-}
-/// Тип выставляемой заявки.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ExchangeOrderType {
-    /// Значение не указано.
-    Unspecified = 0,
-    /// Заявка по рыночной цене.
-    Market = 1,
-    /// Лимитная заявка.
-    Limit = 2,
-}
-impl ExchangeOrderType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "EXCHANGE_ORDER_TYPE_UNSPECIFIED",
-            Self::Market => "EXCHANGE_ORDER_TYPE_MARKET",
-            Self::Limit => "EXCHANGE_ORDER_TYPE_LIMIT",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "EXCHANGE_ORDER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "EXCHANGE_ORDER_TYPE_MARKET" => Some(Self::Market),
-            "EXCHANGE_ORDER_TYPE_LIMIT" => Some(Self::Limit),
-            _ => None,
-        }
-    }
-}
-/// Тип TakeProfit-заявки.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum TakeProfitType {
-    /// Значение не указано.
-    Unspecified = 0,
-    /// Обычная заявка, значение по умолчанию.
-    Regular = 1,
-    /// Трейлинг-стоп.
-    Trailing = 2,
-}
-impl TakeProfitType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::Unspecified => "TAKE_PROFIT_TYPE_UNSPECIFIED",
-            Self::Regular => "TAKE_PROFIT_TYPE_REGULAR",
-            Self::Trailing => "TAKE_PROFIT_TYPE_TRAILING",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "TAKE_PROFIT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "TAKE_PROFIT_TYPE_REGULAR" => Some(Self::Regular),
-            "TAKE_PROFIT_TYPE_TRAILING" => Some(Self::Trailing),
-            _ => None,
-        }
-    }
-}
-/// Тип параметров значений трейлинг-стопа.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum TrailingValueType {
-    /// Значение не указано.
-    TrailingValueUnspecified = 0,
-    /// Абсолютное значение в единицах цены.
-    TrailingValueAbsolute = 1,
-    /// Относительное значение в процентах.
-    TrailingValueRelative = 2,
-}
-impl TrailingValueType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::TrailingValueUnspecified => "TRAILING_VALUE_UNSPECIFIED",
-            Self::TrailingValueAbsolute => "TRAILING_VALUE_ABSOLUTE",
-            Self::TrailingValueRelative => "TRAILING_VALUE_RELATIVE",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "TRAILING_VALUE_UNSPECIFIED" => Some(Self::TrailingValueUnspecified),
-            "TRAILING_VALUE_ABSOLUTE" => Some(Self::TrailingValueAbsolute),
-            "TRAILING_VALUE_RELATIVE" => Some(Self::TrailingValueRelative),
-            _ => None,
-        }
-    }
-}
-/// Статус трейлинг-стопа.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum TrailingStopStatus {
-    /// Значение не указано.
-    TrailingStopUnspecified = 0,
-    /// Активный.
-    TrailingStopActive = 1,
-    /// Активированный.
-    TrailingStopActivated = 2,
-}
-impl TrailingStopStatus {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Self::TrailingStopUnspecified => "TRAILING_STOP_UNSPECIFIED",
-            Self::TrailingStopActive => "TRAILING_STOP_ACTIVE",
-            Self::TrailingStopActivated => "TRAILING_STOP_ACTIVATED",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "TRAILING_STOP_UNSPECIFIED" => Some(Self::TrailingStopUnspecified),
-            "TRAILING_STOP_ACTIVE" => Some(Self::TrailingStopActive),
-            "TRAILING_STOP_ACTIVATED" => Some(Self::TrailingStopActivated),
-            _ => None,
-        }
-    }
-}
-/// Generated client implementations.
-pub mod stop_orders_service_client {
-    #![allow(
-        unused_variables,
-        dead_code,
-        missing_docs,
-        clippy::wildcard_imports,
-        clippy::let_unit_value,
-    )]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct StopOrdersServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl StopOrdersServiceClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> StopOrdersServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::Body>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> StopOrdersServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::Body>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
-        {
-            StopOrdersServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
-        /// PostStopOrder — выставить стоп-заявку
-        pub async fn post_stop_order(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PostStopOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostStopOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.StopOrdersService/PostStopOrder",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.StopOrdersService",
-                        "PostStopOrder",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// GetStopOrders — получить список активных стоп-заявок по счету
-        pub async fn get_stop_orders(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetStopOrdersRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetStopOrdersResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.StopOrdersService/GetStopOrders",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.StopOrdersService",
-                        "GetStopOrders",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        /// CancelStopOrder — отменить стоп-заявку
-        pub async fn cancel_stop_order(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CancelStopOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CancelStopOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/tinkoff.public.invest.api.contract.v1.StopOrdersService/CancelStopOrder",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.StopOrdersService",
-                        "CancelStopOrder",
                     ),
                 );
             self.inner.unary(req, path, codec).await
