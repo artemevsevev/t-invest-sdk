@@ -170,7 +170,8 @@ impl TInvestSdk {
     /// - Не удалось настроить TLS конфигурацию
     /// - Невозможно установить соединение с каналом
     pub async fn new(token: &str, environment: Environment) -> Result<Self, TInvestError> {
-        let tls = ClientTlsConfig::new().with_native_roots();
+        let tls = ClientTlsConfig::new().with_webpki_roots();
+
         let channel = Channel::from_static(environment.api_url())
             .tls_config(tls)?
             .connect()
