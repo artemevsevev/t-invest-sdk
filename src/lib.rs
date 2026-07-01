@@ -1,3 +1,4 @@
+use api::{MoneyValue, Quotation};
 use api::{
     instruments_service_client::InstrumentsServiceClient,
     market_data_service_client::MarketDataServiceClient,
@@ -9,13 +10,12 @@ use api::{
     sandbox_service_client::SandboxServiceClient, signal_service_client::SignalServiceClient,
     stop_orders_service_client::StopOrdersServiceClient, users_service_client::UsersServiceClient,
 };
-use api::{MoneyValue, Quotation};
-use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
+use rust_decimal::prelude::ToPrimitive;
 use thiserror::Error;
 use tonic::transport::ClientTlsConfig;
 use tonic::{
-    service::{interceptor::InterceptedService, Interceptor},
+    service::{Interceptor, interceptor::InterceptedService},
     transport::Channel,
 };
 
@@ -66,8 +66,8 @@ impl Environment {
     /// Статическую строку, содержащую полный базовый URL для API запросов.
     fn api_url(&self) -> &'static str {
         match self {
-            Environment::Production => "https://invest-public-api.tinkoff.ru:443/",
-            Environment::Sandbox => "https://sandbox-invest-public-api.tinkoff.ru:443/",
+            Environment::Production => "https://invest-public-api.tbank.ru:443/",
+            Environment::Sandbox => "https://sandbox-invest-public-api.tbank.ru:443/",
         }
     }
 }
