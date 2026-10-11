@@ -18,12 +18,11 @@ rust_decimal = "1.42.0"
 thiserror = "2.0.18"
 tonic = { version = "0.14.6", features = [
     "tls-ring",
-    "tls-webpki-roots",
+    "tls-native-roots",
     "gzip",
 ] }
 tonic-prost = { version = "0.14.6" }
 uuid = { version = "1.23.1", features = ["v4"] }
-webpki-roots = "1.0.8"
 
 [dev-dependencies]
 rust_decimal_macros = "1.40.0"
