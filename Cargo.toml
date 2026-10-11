@@ -12,17 +12,17 @@ categories = ["finance"]
 exclude = ["investAPI/*"]
 
 [dependencies]
-prost = "0.14.3"
-prost-types = "0.14.3"
-rust_decimal = "1.42.0"
-thiserror = "2.0.18"
+prost = "0.14.4"
+prost-types = "0.14.4"
+rust_decimal = "1.43.0"
+thiserror = "2.0.21"
 tonic = { version = "0.14.6", features = [
     "tls-ring",
     "tls-native-roots",
     "gzip",
 ] }
 tonic-prost = { version = "0.14.6" }
-uuid = { version = "1.23.1", features = ["v4"] }
+uuid = { version = "1.28.0", features = ["v4"] }
 
 [dev-dependencies]
 rust_decimal_macros = "1.40.0"
